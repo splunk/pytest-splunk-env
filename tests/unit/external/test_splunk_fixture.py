@@ -1,7 +1,7 @@
 import pytest
 import pathlib
 
-def test_splunk_fixture(request,testdir):
+def test_splunk_fixture_external(request,testdir):
 
     testdir.makepyfile(
         """

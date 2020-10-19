@@ -1,7 +1,7 @@
 import pytest
 import pathlib
 
-def test_splunk_fixture(request,testdir):
+def test_splunk_fixture_local(request,testdir):
 
     testdir.makepyfile(
         """
@@ -11,5 +11,4 @@ def test_splunk_fixture(request,testdir):
             assert True
 """)
     result = testdir.runpytest("--splunk-type=local")
-    # we should have two passed tests and one failed (unarametrized one)
     result.assert_outcomes(passed=1)

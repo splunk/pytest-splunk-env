@@ -103,9 +103,9 @@ def splunk_docker_compose(
     LOGGER.info("Starting docker_service=splunk")
     fn = os.path.join(tmp_path_factory.getbasetemp().parent,
                       "pytest_splunk_env_docker_compose.lock")
-    raise Exception
+
     with FileLock(str(fn)):
-        return SplunkEnvDockerCompose(search_index=request.config.getoption("search_index"),
+        return SplunkEnvDockerCompose(docker_services,search_index=request.config.getoption("search_index"),
                                       search_retry=request.config.getoption(
                                           "search_retry"),
                                       search_interval=request.config.getoption(

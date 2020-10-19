@@ -49,5 +49,35 @@ class SplunkEnv():
             search, interval=self.search_util.search_interval, retries=self.search_util.search_retry
         )
 
+    def is_responsive_splunk(splunk):
+        """
+        Verify if the management port of Splunk is responsive or not
+
+        Args:
+            splunk (dict): details of the Splunk instance
+
+        Returns:
+            bool: True if Splunk is responsive. False otherwise
+        """
+        try:
+            LOGGER.info(
+                "Trying to connect Splunk instance...  splunk=%s", json.dumps(splunk),
+            )
+            client.connect(
+                username=splunk["username"],
+                password=splunk["password"],
+                host=splunk["host"],
+                port=splunk["port"],
+            )
+            LOGGER.info("Connected to Splunk instance.")
+
+            return True
+        except Exception as e:
+            LOGGER.warning(
+                "Could not connect to Splunk Instance. Will try again. exception=%s", str(e),
+            )
+            return False
+
+
     def splunk_search():
         return self.search_util
