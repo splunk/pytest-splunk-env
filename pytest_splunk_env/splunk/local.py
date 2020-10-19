@@ -13,6 +13,7 @@ class SplunkEnvLocal(SplunkEnvExternal):
                  search_interval,
                  username,
                  password,
+                 hec_token
                  ):
         super().__init__(
             search_index,
@@ -20,7 +21,8 @@ class SplunkEnvLocal(SplunkEnvExternal):
             search_interval,
             splunkd_host="127.0.0.1",
             splunkd_port="8089",
-            splunk_web="8000",
+            web_port="8000",
             username=username,
-            password=password
+            password=password,
+            hec_token=hec_token
         )

@@ -95,6 +95,18 @@ def pytest_addoption(parser):
         default="Chang3d!",
         help="Password of the Splunk user",
     )
+    group_external.addoption(
+        "--splunk-ext-version",
+        action="store",
+        dest="splunk_version",
+        default="latest",
+        help=(
+            "Splunk version to spin up with docker while splunk-type "
+            " is set to docker. Examples, "
+            " 1) latest: latest Splunk Enterprise tagged by the https://github.com/splunk/docker-splunk"
+            " 2) 8.0.0: GA release of 8.0.0."
+        ),
+    )
 
 
 class SplunkEnvExternal(SplunkEnv):
@@ -105,9 +117,10 @@ class SplunkEnvExternal(SplunkEnv):
                  search_interval,
                  splunkd_host,
                  splunkd_port,
-                 splunk_web,
+                 web_port,
                  username,
-                 password
+                 password,                 
+                 hec_token
                  ):
         super().__init__(
             search_index,
@@ -115,8 +128,8 @@ class SplunkEnvExternal(SplunkEnv):
             search_interval,
             splunkd_host=splunkd_host,
             splunkd_port=splunkd_port,
-            splunk_web="8000",
+            web_port="8000",
             username=username,
-            password=password
-
+            password=password,
+            hec_token=hec_token,
         )

@@ -46,6 +46,5 @@ def test_splunk_fixture_compose(request,testdir):
             assert True
 """)
     
-    result = testdir.runpytest("--splunk-type=docker-compose")
-    # we should have two passed tests and one failed (unarametrized one)
+    result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
     result.assert_outcomes(passed=1)

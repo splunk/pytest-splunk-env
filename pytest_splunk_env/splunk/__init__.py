@@ -78,7 +78,7 @@ def splunk(request):
     elif splunk_type == "docker":
         fixture = "splunk_docker"
     elif splunk_type == "docker-compose":
-        fixture = "splunk_docker_compose"        
+        fixture = "splunk_docker_compose"
     else:
         raise Exception
     request.fixturenames.append(fixture)
@@ -86,12 +86,13 @@ def splunk(request):
 
     yield splunk
 
+
 @pytest.fixture(scope="session")
 def splunk_docker_compose(
     request, docker_services, docker_compose_files, tmp_path_factory
 ):
     """
-    
+
     Splunk docker depends on lovely-pytest-docker to create the docker instance
     of Splunk this may be changed in the future.
     docker-compose.yml in the project root must have
@@ -105,7 +106,7 @@ def splunk_docker_compose(
                       "pytest_splunk_env_docker_compose.lock")
 
     with FileLock(str(fn)):
-        return SplunkEnvDockerCompose(docker_services,search_index=request.config.getoption("search_index"),
+        return SplunkEnvDockerCompose(docker_services, search_index=request.config.getoption("search_index"),
                                       search_retry=request.config.getoption(
                                           "search_retry"),
                                       search_interval=request.config.getoption(
@@ -113,7 +114,11 @@ def splunk_docker_compose(
                                       username=request.config.getoption(
                                           "splunk_user"),
                                       password=request.config.getoption(
-                                          "splunk_password")
+                                          "splunk_password"),
+                                      hec_token=request.config.getoption(
+                                          "splunk_hec_token"),
+                                      splunk_version=request.config.getoption(
+                                          "splunk_version")
                                       )
 
 
@@ -151,9 +156,12 @@ def splunk_external(request):
         search_interval=request.config.getoption("search_interval"),
         splunkd_host=request.config.getoption("splunk_host"),
         splunkd_port=request.config.getoption("splunkd_port"),
-        splunk_web=request.config.getoption("splunk_web"),
+        web_port=request.config.getoption("splunk_web"),
         username=request.config.getoption("splunk_user"),
-        password=request.config.getoption("splunk_password")
+        password=request.config.getoption("splunk_password"),
+        hec_token=request.config.getoption(
+                                          "splunk_hec_token"),
+                                      
     )
 
 
@@ -171,5 +179,8 @@ def splunk_local(request):
         search_retry=request.config.getoption("search_retry"),
         search_interval=request.config.getoption("search_interval"),
         username=request.config.getoption("splunk_user"),
-        password=request.config.getoption("splunk_password")
+        password=request.config.getoption("splunk_password"),
+        hec_token=request.config.getoption(
+                                          "splunk_hec_token"),
+                                      
     )
