@@ -207,4 +207,4 @@ def splunk_setup(splunk):
             )
 
     """
-    pass
+    return splunk
