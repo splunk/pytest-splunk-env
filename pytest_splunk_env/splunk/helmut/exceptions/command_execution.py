@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 class CommandExecutionFailure(RuntimeError):
     """
     Generic exception for when a Splunk command fails to execute.

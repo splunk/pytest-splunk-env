@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 import logging
 from filelock import FileLock
@@ -10,6 +13,8 @@ from .external import SC4SEnvExternal
 #from .local import SC4SEnvLocal
 from .dockercompose import SC4SEnvDockerCompose
 LOGGER = logging.getLogger(__name__)
+
+
 def pytest_addoption(parser):
     """Add options for interaction with Splunk this allows the tool to work in two modes
     1) docker mode which is typically used by developers on their workstation
@@ -44,6 +49,7 @@ def pytest_addoption(parser):
         help="SC4S Type external|local|docker-compose Note: if splunk-type is docker-compose sc4s must match",
     )
 
+
 @pytest.fixture(scope="session")
 def sc4s(request):
     """
@@ -71,6 +77,7 @@ def sc4s(request):
 
     yield sc4s
 
+
 @pytest.fixture(scope="session")
 def sc4s_docker_compose(
     request, docker_services, splunk, tmp_path_factory
@@ -91,14 +98,14 @@ def sc4s_docker_compose(
 
     with FileLock(str(fn)):
         return SC4SEnvDockerCompose(
-                                docker_services, 
-                                splunk
-                                )
+            docker_services,
+            splunk
+        )
 
 
 @pytest.fixture(scope="session")
 def sc4s_docker(
-    request, docker_services, docker_compose_files, splunk,tmp_path_factory, worker_id
+    request, docker_services, docker_compose_files, splunk, tmp_path_factory, worker_id
 ):
     """
     Splunk docker depends on lovely-pytest-docker to create the docker instance
@@ -116,7 +123,7 @@ def sc4s_docker(
 
 
 @pytest.fixture(scope="session")
-def sc4s_external(request,splunk):
+def sc4s_external(request, splunk):
     """
     This fixture provides the connection properties to Splunk based on the pytest args
 
@@ -134,8 +141,8 @@ def sc4s_external(request,splunk):
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
         hec_token=request.config.getoption(
-                                          "splunk_hec_token"),
-                                      
+            "splunk_hec_token"),
+
     )
 
 
@@ -155,7 +162,6 @@ def sc4s_local(request):
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
         hec_token=request.config.getoption(
-                                          "splunk_hec_token"),
-                                      
-    )
+            "splunk_hec_token"),
 
+    )

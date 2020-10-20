@@ -1,7 +1,12 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from utils import *
 import logging
 
-def test_sc4s_fixture_compose(request,testdir,caplog):
+
+def test_sc4s_fixture_compose(request, testdir, caplog):
     caplog.set_level(logging.INFO)
     setup_test_dir(testdir)
     testdir.makepyfile(
@@ -18,6 +23,7 @@ def test_sc4s_fixture_compose(request,testdir,caplog):
             assert  udp != "514"
             assert tcp != udp
 """)
-    
-    result = testdir.runpytest("--splunk-type=docker-compose","--sc4s-type=docker-compose","--tb=long","-v")
+
+    result = testdir.runpytest(
+        "--splunk-type=docker-compose", "--sc4s-type=docker-compose", "--tb=long", "-v")
     result.assert_outcomes(passed=2)

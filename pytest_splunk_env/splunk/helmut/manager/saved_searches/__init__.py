@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from abc import abstractmethod
 
 from pytest_splunk_env.splunk.helmut.manager import Manager

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from pytest_splunk_env.splunk.helmut.manager.jobs.sdk import SDKJobWrapper
 from pytest_splunk_env.splunk.helmut.manager.saved_searches.saved_search import SavedSearch
 

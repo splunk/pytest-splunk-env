@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 class WaitTimedOut(RuntimeError):
     """
     This exception is raised when a designated wait period times out.

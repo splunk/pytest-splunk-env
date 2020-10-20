@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 class SearchFailure(RuntimeError):
     """
     This exception is raised when a search fails and returns the error through sdk get_message function.

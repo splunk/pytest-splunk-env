@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import pytest
 from .base import SplunkEnv
 from .external import SplunkEnvExternal

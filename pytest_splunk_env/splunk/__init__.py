@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 import logging
 from filelock import FileLock
@@ -84,6 +87,7 @@ def splunk(request):
 
     yield splunk
 
+
 @pytest.fixture(scope="session")
 def splunk_docker_compose(
     request, docker_services, tmp_path_factory
@@ -157,8 +161,8 @@ def splunk_external(request):
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
         hec_token=request.config.getoption(
-                                          "splunk_hec_token"),
-                                      
+            "splunk_hec_token"),
+
     )
 
 
@@ -178,8 +182,8 @@ def splunk_local(request):
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
         hec_token=request.config.getoption(
-                                          "splunk_hec_token"),
-                                      
+            "splunk_hec_token"),
+
     )
 
 

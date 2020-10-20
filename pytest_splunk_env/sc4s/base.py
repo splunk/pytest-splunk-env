@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import pytest
 
 from pytest_splunk_env.splunk.helmut.manager.jobs import Jobs
@@ -6,10 +10,12 @@ from pytest_splunk_env.splunk.helmut_lib.SearchUtil import SearchUtil
 import requests
 import splunklib.client as client
 import logging
-import time, timeit
+import time
+import timeit
 import json
 
 LOGGER = logging.getLogger(__name__)
+
 
 class SC4SEnv():
     def __init__(self,
@@ -17,7 +23,6 @@ class SC4SEnv():
                  sc4s_host
                  ):
 
-        
         self.splunk = splunk
         self.sc4s_host = sc4s_host
         self.check_ready()
@@ -31,6 +36,6 @@ class SC4SEnv():
         LOGGER.info(f"result: {result}")
         if not result:
             raise Exception()
-        
-    def get_service(self,port,proto):
+
+    def get_service(self, port, proto):
         return self.sc4s_host, port

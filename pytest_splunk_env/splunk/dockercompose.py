@@ -1,4 +1,6 @@
-
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 import pytest
 import os
@@ -40,7 +42,7 @@ class SplunkEnvDockerCompose(SplunkEnv):
             web_port=docker_services.port_for("splunk", 8000),
             username=username,
             password=password,
-            hec_host = docker_services.docker_ip,
-            hec_port = docker_services.port_for("splunk", 8088),
+            hec_host=docker_services.docker_ip,
+            hec_port=docker_services.port_for("splunk", 8088),
             hec_token=hec_token
         )

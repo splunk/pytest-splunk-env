@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import pytest
 
 from pytest_splunk_env.splunk.helmut.manager.jobs import Jobs
@@ -6,7 +10,8 @@ from pytest_splunk_env.splunk.helmut_lib.SearchUtil import SearchUtil
 import requests
 import splunklib.client as client
 import logging
-import time, timeit
+import time
+import timeit
 import json
 
 LOGGER = logging.getLogger(__name__)
@@ -19,7 +24,7 @@ class SplunkEnv():
     def __init__(self,
                  search_index,
                  search_retry,
-                 search_interval,                 
+                 search_interval,
                  name=None,
                  username="Admin",
                  password="changeme",
@@ -37,8 +42,8 @@ class SplunkEnv():
                  hec_host="127.0.0.1",
                  hec_port="8088",
                  hec_validate=False,
-                 hec_token = None
-                 
+                 hec_token=None
+
                  ):
 
         LOGGER.info(
@@ -81,8 +86,8 @@ class SplunkEnv():
         self.wait_until_responsive(
             timeout=30.0, pause=0.5, check=lambda: self.is_responsive_hec(),
         )
-        
-        LOGGER.info("Login to Splunk")        
+
+        LOGGER.info("Login to Splunk")
         self.cloud_splunk = CloudSplunk(
             splunkd_host=self.splunkd_host,
             splunkd_port=self.splunkd_port,
@@ -105,7 +110,7 @@ class SplunkEnv():
         LOGGER.info(f"result: {result}")
         if not result:
             raise Exception()
-        
+
         event = "this is a test"
         self.send_hec_event(event)
         search = f"| search index=_internal sourcetype=\"pytest-splunk-env:probe\" \"{event}\" | tail 10"
@@ -133,7 +138,6 @@ class SplunkEnv():
         raise Exception(
             'Timeout reached while waiting on service!'
         )
-
 
     def is_responsive_splunk(self):
         """
@@ -184,28 +188,29 @@ class SplunkEnv():
                 "Authorization": f'Splunk {self.hec_token}'
             }
             response = requests.get(
-                    uri,
-                    verify=False,
-                )
+                uri,
+                verify=False,
+            )
             LOGGER.debug("Status code: {}".format(response.status_code))
-            if response.status_code in (200,201):
+            if response.status_code in (200, 201):
                 LOGGER.info("Splunk HEC is responsive.")
                 return True
             else:
                 return False
         except Exception as e:
             LOGGER.debug(
-                "Could not connect to Splunk HEC. Will try again. exception=%s", str(e),
+                "Could not connect to Splunk HEC. Will try again. exception=%s", str(
+                    e),
             )
             return False
 
-    def send_hec_event(self,event_content):
+    def send_hec_event(self, event_content):
         """
         Used to send an event for to validate the stack
 
         Args:
             event: string value of the event
-        
+
         """
         try:
             uri = f'{self.hec_scheme}://{self.hec_host}:{self.hec_port}/services/collector'
@@ -216,29 +221,32 @@ class SplunkEnv():
                 "Authorization": f'Splunk {self.hec_token}',
                 'Connection': 'close'
             }
-            payload = { "sourcetype": "pytest-splunk-env:probe", "index": "_internal", "event": event_content }
+            payload = {"sourcetype": "pytest-splunk-env:probe",
+                       "index": "_internal", "event": event_content}
 
             event = []
             event.append(json.dumps(payload))
-            
+
             response = requests.post(
-                    uri,
-                    verify=False,
-                    data=event[0],
-                    headers=session_headers
-                )
+                uri,
+                verify=False,
+                data=event[0],
+                headers=session_headers
+            )
             LOGGER.debug("Status code: {}".format(response.status_code))
-            if response.status_code in (200,201):
+            if response.status_code in (200, 201):
                 LOGGER.info("Splunk HEC is responsive.")
                 return True
             else:
                 LOGGER.error(
-                "Could not post to Splunk HEC. status code %s", str(response.status_code),
+                    "Could not post to Splunk HEC. status code %s", str(
+                        response.status_code),
                 )
                 raise Exception
         except Exception as e:
             LOGGER.warning(
-                "Could not connect to Splunk HEC. Will try again. exception=%s", str(e),
+                "Could not connect to Splunk HEC. Will try again. exception=%s", str(
+                    e),
             )
             return False
 

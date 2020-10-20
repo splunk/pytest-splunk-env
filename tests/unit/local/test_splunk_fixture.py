@@ -1,7 +1,12 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import pytest
 import pathlib
 
-def test_splunk_fixture_local(request,testdir):
+
+def test_splunk_fixture_local(request, testdir):
 
     testdir.makepyfile(
         """

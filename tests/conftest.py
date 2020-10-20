@@ -1,6 +1,11 @@
+# SPDX-FileCopyrightText: 2020 Splunk Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import pytest
 import os
 pytest_plugins = ["pytester"]
+
 
 @pytest.fixture(scope='session')
 def docker_compose_files(pytestconfig):
@@ -10,5 +15,3 @@ def docker_compose_files(pytestconfig):
     return [
         os.path.join(str(pytestconfig.rootdir), 'docker-compose.yml')
     ]
-
-
