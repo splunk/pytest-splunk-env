@@ -1,6 +1,17 @@
 from utils import *
 import logging
-def test_splunk_fixture_compose(request,testdir,caplog):
+import configparser
+
+def pytest_generate_tests(metafunc):
+    if "splunk_version" in metafunc.fixturenames:
+        config = configparser.ConfigParser()
+        config.read('deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf')
+        splunk_versions = []
+        for v in config.sections():
+            splunk_versions.append(config[v]['VERSION'])
+        metafunc.parametrize("splunk_version", splunk_versions)
+
+def test_splunk_fixture_compose(request,testdir,caplog,splunk_version):
     caplog.set_level(logging.INFO)
     setup_test_dir(testdir)
     testdir.makepyfile(
@@ -8,14 +19,20 @@ def test_splunk_fixture_compose(request,testdir,caplog):
         import pytest
 
         def test_splunk_no_params(splunk_setup):
-            assert True
+            search = f"| search index=_internal | tail 10"
+            result = splunk_setup.search_util.checkQueryCountIsGreaterThanZero(
+                search, interval=1, retries=0
+            )
+            assert result
 """)
     
     #result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
-    result = testdir.runpytest("--splunk-type=docker-compose")
+    result = testdir.runpytest("--splunk-type=docker-compose",f"--splunk-version={splunk_version}")
     result.assert_outcomes(passed=1)
 
-def test_splunk_fixture_compose_7_3_7(request,testdir):
+
+
+def test_splunk_fixture_compose_bad_splunk_version(request,testdir):
     
     setup_test_dir(testdir)
     testdir.makepyfile(
@@ -23,24 +40,9 @@ def test_splunk_fixture_compose_7_3_7(request,testdir):
         import pytest
 
         def test_splunk_no_params(splunk_setup):
-            assert True
-
-        
-""")
-    
-    #result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
-    result = testdir.runpytest("--splunk-type=docker-compose","--splunk-version=7.3.7")
-    result.assert_outcomes(passed=1)
-
-def test_splunk_fixture_compose_6_0_0(request,testdir):
-    
-    setup_test_dir(testdir)
-    testdir.makepyfile(
-        """
-        import pytest
-
-        def test_splunk_no_params(splunk_setup):
-            assert True
+            #this should always error
+            assert False
+            
 """)
     
     #result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
