@@ -65,8 +65,7 @@ workflows:
   build:
     jobs:
       - test-compose:
-          python:
-            - "3.7"
+          python: ["3.7"]
           filters:
             branches:
               only: /.*/
