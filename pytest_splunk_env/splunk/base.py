@@ -44,6 +44,9 @@ class SplunkEnv():
         LOGGER.info(
             f"Docker container splunk info. host={splunkd_host}, port={splunkd_port}, port_web={web_port} port_hec={hec_port} port_s2s={s2s_port}",
         )
+        self.search_index = search_index
+        self.search_retry = search_retry
+        self.search_interval = search_interval
 
         self.splunkd_host = splunkd_host
         self.splunkd_scheme = splunkd_scheme
@@ -67,6 +70,9 @@ class SplunkEnv():
         self.username = username
         self.password = password
 
+        self.check_ready()
+
+    def check_ready(self):
         LOGGER.info("Wait for remote side to be responsive splunkd")
         self.wait_until_responsive(
             timeout=180.0, pause=0.5, check=lambda: self.is_responsive_splunk(),
@@ -87,9 +93,9 @@ class SplunkEnv():
         self.jobs = Jobs(self.conn)
         LOGGER.info("initialized SearchUtil for the Splunk instace.")
         self.search_util = SearchUtil(self.jobs, LOGGER)
-        self.search_util.search_index = search_index
-        self.search_util.search_retry = search_retry
-        self.search_util.search_interval = search_interval
+        self.search_util.search_index = self.search_index
+        self.search_util.search_retry = self.search_retry
+        self.search_util.search_interval = self.search_interval
 
         search = f"| tstats count where index=_internal sourcetype=splunkd"
         LOGGER.info(f"Search: {search}")
@@ -110,12 +116,6 @@ class SplunkEnv():
         LOGGER.info(f"result: {result}")
         if not result:
             raise Exception()
-        
-
-
-
-
-
 
     @staticmethod
     def wait_until_responsive(check, timeout, pause,

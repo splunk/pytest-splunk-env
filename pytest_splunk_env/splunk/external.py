@@ -14,7 +14,7 @@ def pytest_addoption(parser):
 
     group_external = parser.getgroup("splunk-env-external")
     group_external.addoption(
-        "--splunk-ext-host",
+        "--splunk-host",
         action="store",
         dest="splunk_host",
         default="127.0.0.1",
@@ -24,7 +24,7 @@ def pytest_addoption(parser):
         ),
     )
     group_external.addoption(
-        "--splunk-ext-forwarder-host",
+        "--splunk-forwarder-host",
         action="store",
         dest="splunk_forwarder_host",
         help=(
@@ -33,42 +33,42 @@ def pytest_addoption(parser):
         ),
     )
     group_external.addoption(
-        "--splunk-ext-hec-scheme",
+        "--splunk-hec-scheme",
         action="store",
         dest="splunk_hec_scheme",
         default="https",
         help="Splunk HTTP event collector port. default is https.",
     )
     group_external.addoption(
-        "--splunk-ext-hec-port",
+        "--splunk-hec-port",
         action="store",
         dest="splunk_hec",
         default="8088",
         help="Splunk HTTP event collector port. default is 8088.",
     )
     group_external.addoption(
-        "--splunk-ext-hec-token",
+        "--splunk-hec-token",
         action="store",
         dest="splunk_hec_token",
         default="9b741d03-43e9-4164-908b-e09102327d22",
         help='Splunk HTTP event collector token. default is "9b741d03-43e9-4164-908b-e09102327d22" If an external forwarder is used provide HEC token of forwarder.',
     )
     group_external.addoption(
-        "--splunk-ext-port",
+        "--splunk-port",
         action="store",
         dest="splunkd_port",
         default="8089",
         help="Splunk Management port. default is 8089.",
     )
     group_external.addoption(
-        "--splunk-ext-s2s-port",
+        "--splunk-s2s-port",
         action="store",
         dest="splunk_s2s",
         default="9997",
         help="Splunk s2s port. default is 9997.",
     )
     group_external.addoption(
-        "--splunk-ext-s2s-scheme",
+        "--splunk-s2s-scheme",
         action="store",
         dest="splunk_s2s_scheme",
         default="tcp",
@@ -82,21 +82,21 @@ def pytest_addoption(parser):
         help="Splunk web port. default is 8000.",
     )
     group_external.addoption(
-        "--splunk-ext-user",
+        "--splunk-user",
         action="store",
         dest="splunk_user",
         default="admin",
         help="Splunk login user. The user should have search capabilities.",
     )
     group_external.addoption(
-        "--splunk-ext-password",
+        "--splunk-password",
         action="store",
         dest="splunk_password",
         default="Chang3d!",
         help="Password of the Splunk user",
     )
     group_external.addoption(
-        "--splunk-ext-version",
+        "--splunk-version",
         action="store",
         dest="splunk_version",
         default="latest",
