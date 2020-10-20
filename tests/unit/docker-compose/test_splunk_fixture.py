@@ -32,7 +32,7 @@ def setup_test_dir(testdir):
 
     shutil.copy(
         os.path.join(testdir.request.config.invocation_dir, "docker-compose.yml"),
-        os.path.join(testdir.tmpdir,"tests"),
+        testdir.tmpdir,
     )
 
 def test_splunk_fixture_compose(request,testdir):
@@ -46,5 +46,6 @@ def test_splunk_fixture_compose(request,testdir):
             assert True
 """)
     
-    result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
+    #result = testdir.runpytest("--splunk-type=docker-compose","--keepalive")
+    result = testdir.runpytest("--splunk-type=docker-compose")
     result.assert_outcomes(passed=1)

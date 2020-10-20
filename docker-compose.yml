@@ -47,7 +47,7 @@ services:
 
   splunk:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile.splunk
       args:
         SPLUNK_APP_ID: ${SPLUNK_APP_ID}

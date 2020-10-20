@@ -86,10 +86,9 @@ def splunk(request):
 
     yield splunk
 
-
 @pytest.fixture(scope="session")
 def splunk_docker_compose(
-    request, docker_services, docker_compose_files, tmp_path_factory
+    request, docker_services, tmp_path_factory
 ):
     """
 
