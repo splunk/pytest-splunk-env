@@ -63,6 +63,3 @@ services:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
 
-volumes:
-  splunk-sc4s-var:
-    external: false
