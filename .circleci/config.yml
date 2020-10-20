@@ -1,0 +1,159 @@
+#COPYRIGHT SPLUNK, Inc 2020
+
+version: 2.1
+orbs:
+  go: circleci/go@0.2.0
+
+jobs:
+  test-compose:
+    parameters:
+      python:
+        type: string
+        default: "3.7"
+    docker:
+      - image: circleci/python:<< parameters.python >>
+    steps:
+      - checkout
+      - run:
+          name: Install Tools
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - run:
+          name: Build
+          command: |
+            pip install poetry-dynamic-versioning
+            source $HOME/.poetry/env
+            poetry run poetry-dynamic-versioning
+            poetry install
+            poetry run pytest tests/unit/docker-compose
+
+  publish-pypi:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - poetry-cache-{{ checksum "poetry.lock" }}
+      - run:
+          name: Install Tools
+          command: |
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - run:
+          name: Build
+          command: |
+            #
+            source $HOME/.poetry/env
+            poetry install
+            poetry run poetry-dynamic-versioning
+            poetry publish --build -u $TWINE_USERNAME -p $TWINE_PASSWORD
+      - save_cache:
+          key: poetry-cache-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/.poetry
+      - store_artifacts:
+          path: dist
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
+          # taken to be the root directory of the workspace.
+          root: .
+          # Must be relative path from root
+          paths:
+            - dist
+
+workflows:
+  build:
+    jobs:
+      - test-compose:
+          python:
+            - "3.7"
+          filters:
+            branches:
+              only: /.*/
+  #     - splunk-release/tag:
+  #         name: tag-alpha
+  #         tag_level: a
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         filters:
+  #           branches:
+  #             only: develop
+  #     - approval-tag-beta:
+  #         requires:
+  #           - tag-alpha
+  #         type: approval
+  #         filters:
+  #           branches:
+  #             only: develop
+  #     - splunk-release/tag:
+  #         name: tag-beta
+  #         tag_level: b
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         requires:
+  #           - approval-tag-beta
+  #     - approval-merge-beta-to-master:
+  #         requires:
+  #           - tag-beta
+  #         type: approval
+  #         filters:
+  #           branches:
+  #             only: develop
+  #     - splunk-release/merge-to-master:
+  #         name: merge-beta-to-master
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         requires:
+  #           - approval-merge-beta-to-master
+  #         filters:
+  #           branches:
+  #             only: develop
+  #     - splunk-release/tag:
+  #         name: tag-candidate
+  #         tag_level: candidate
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         filters:
+  #           branches:
+  #             only: master
+  #     - approval-tag-final-major:
+  #         type: approval
+  #         requires:
+  #           - tag-candidate
+  #     - splunk-release/tag:
+  #         name: tag-final-major
+  #         tag_level: final -s major
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         requires:
+  #           - approval-tag-final-major
+  #     - approval-tag-final-minor:
+  #         type: approval
+  #         requires:
+  #           - tag-candidate
+  #     - splunk-release/tag:
+  #         name: tag-final-minor
+  #         tag_level: final -s minor
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         requires:
+  #           - approval-tag-final-minor
+  #     - approval-tag-final-patch:
+  #         type: approval
+  #         requires:
+  #           - tag-candidate
+  #     - splunk-release/tag:
+  #         name: tag-final-patch
+  #         tag_level: final -s patch
+  #         gh_user: ${GH_USER}
+  #         gh_token: ${GH_PAT}
+  #         requires:
+  #           - approval-tag-final-patch
+  # publish:
+  #   jobs:
+  #     - publish-pypi:
+  #         filters:
+  #           branches:
+  #             ignore: /.*/
+  #           tags:
+  #             only: /^v\d*\.\d*\.\d*.*$/
