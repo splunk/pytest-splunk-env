@@ -9,14 +9,17 @@ jobs:
     parameters:
       python:
         type: string
-    docker: # executor type
-      - image: circleci/python:<< parameters.python >>
+    machine:
+      image: ubuntu-1604:202007-01
     steps:
-      - setup_remote_docker
       - checkout
       - run:
           name: Install Tools
           command: |
+            curl https://pyenv.run | bash
+            exec $SHELL
+            pyenv install << parameters.python >>
+            pyenv local << parameters.python >>
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
       - run:
           name: Build
