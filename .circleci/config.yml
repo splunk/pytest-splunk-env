@@ -12,6 +12,7 @@ jobs:
     docker: # executor type
       - image: circleci/python:<< parameters.python >>
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Install Tools
