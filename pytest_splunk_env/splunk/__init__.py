@@ -69,8 +69,6 @@ def splunk(request):
     splunk_type = request.config.getoption("splunk_type")
     LOGGER.info("Get the Splunk instance of splunk_type=%s", splunk_type)
 
-    splunk_type = request.config.getoption("splunk_type")
-    LOGGER.info("Get the Splunk instance of splunk_type=%s", splunk_type)
     if splunk_type == "external":
         fixture = "splunk_external"
     elif splunk_type == "local":

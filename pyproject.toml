@@ -27,8 +27,14 @@ flake8 = "^3.8.4"
 isort = "*"
 lovely-pytest-docker = "*"
 
-[tool.poetry.plugins]
-pytest11 = { "pytest_splunk_env_base" = "pytest_splunk_env.splunk.base", "pytest_splunk_env_splunk" = "pytest_splunk_env.splunk", "pytest_splunk_env_splunk_docker" = "pytest_splunk_env.splunk.docker", "pytest_splunk_env_splunk_external" = "pytest_splunk_env.splunk.external", "pytest_splunk_env_splunk_local" = "pytest_splunk_env.splunk.local" }
+[tool.poetry.plugins.pytest11]
+pytest_splunk_env_base = "pytest_splunk_env.splunk.base"
+pytest_splunk_env_splunk = "pytest_splunk_env.splunk"
+pytest_splunk_env_splunk_docker = "pytest_splunk_env.splunk.docker"
+pytest_splunk_env_splunk_external = "pytest_splunk_env.splunk.external"
+pytest_splunk_env_splunk_local = "pytest_splunk_env.splunk.local"
+pytest_splunk_env_sc4s = "pytest_splunk_env.sc4s"
+
 
 [build-system]
 requires = ["poetry>=0.12"]

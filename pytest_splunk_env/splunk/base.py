@@ -97,7 +97,7 @@ class SplunkEnv():
         self.search_util.search_retry = self.search_retry
         self.search_util.search_interval = self.search_interval
 
-        search = f"| tstats count where index=_internal sourcetype=splunkd"
+        search = f"| search index=_internal sourcetype=splunkd | tail 10"
         LOGGER.info(f"Search: {search}")
         result = self.search_util.checkQueryCountIsGreaterThanZero(
             search, interval=self.search_util.search_interval, retries=self.search_util.search_retry
@@ -108,7 +108,7 @@ class SplunkEnv():
         
         event = "this is a test"
         self.send_hec_event(event)
-        search = f"| search index=_internal sourcetype=\"pytest-splunk-env:probe\" \"{event}\""
+        search = f"| search index=_internal sourcetype=\"pytest-splunk-env:probe\" \"{event}\" | tail 10"
         LOGGER.info(f"Search: {search}")
         result = self.search_util.checkQueryCountIsGreaterThanZero(
             search, interval=1, retries=10
