@@ -9,8 +9,7 @@ jobs:
     parameters:
       python:
         type: string
-        default: "3.7"
-    docker:
+    docker: # executor type
       - image: circleci/python:<< parameters.python >>
     steps:
       - checkout
