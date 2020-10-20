@@ -181,3 +181,30 @@ def splunk_local(request):
                                           "splunk_hec_token"),
                                       
     )
+
+
+@pytest.fixture(scope="session")
+def splunk_setup(splunk):
+    """
+    Override this fixture in conftest.py, if any setup is required before the test session.
+    splunk fixture can provide the details of the splunk instance in dict format.
+
+    **Possible setups required**:
+
+        1. Enable Saved-searches before running the tests
+        2. Restart Splunk
+        3. Configure inputs of an Add-on.
+
+    **Example**::
+
+        from splunklib import binding
+        @pytest.fixture(scope="session")
+        def splunk_setup(splunk):
+            splunk_binding = binding.connect(**splunk)
+            splunk_binding.post(
+                f"/servicesNS/nobody/{addon_name}/saved/searches/{savedsearch}/enable"
+                , data=''
+            )
+
+    """
+    pass

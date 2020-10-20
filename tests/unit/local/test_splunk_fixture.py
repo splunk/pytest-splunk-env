@@ -7,7 +7,7 @@ def test_splunk_fixture_local(request,testdir):
         """
         import pytest
 
-        def test_splunk_no_params(splunk):
+        def test_splunk_no_params(splunk_setup):
             assert True
 """)
     result = testdir.runpytest("--splunk-type=local")

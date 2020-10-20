@@ -7,7 +7,7 @@ def test_splunk_fixture_compose(request,testdir,caplog):
         """
         import pytest
 
-        def test_splunk_no_params(splunk):
+        def test_splunk_no_params(splunk_setup):
             assert True
 """)
     
@@ -22,7 +22,7 @@ def test_splunk_fixture_compose_7_3_7(request,testdir):
         """
         import pytest
 
-        def test_splunk_no_params(splunk):
+        def test_splunk_no_params(splunk_setup):
             assert True
 
         
@@ -39,7 +39,7 @@ def test_splunk_fixture_compose_6_0_0(request,testdir):
         """
         import pytest
 
-        def test_splunk_no_params(splunk):
+        def test_splunk_no_params(splunk_setup):
             assert True
 """)
     
