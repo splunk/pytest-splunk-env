@@ -1,7 +1,7 @@
 from utils import *
-
-def test_splunk_fixture_compose(request,testdir):
-
+import logging
+def test_splunk_fixture_compose(request,testdir,caplog):
+    caplog.set_level(logging.INFO)
     setup_test_dir(testdir)
     testdir.makepyfile(
         """
