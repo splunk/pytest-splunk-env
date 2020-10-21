@@ -167,9 +167,9 @@ jobs:
           command: |
             git config --global user.email "addonreleasesrv@splunk.com"
             git config --global user.name "Add on release service"
-            git pull origin master
-            git merge master -m "Merge from master"
-            git checkout master
+            git pull origin main
+            git merge main -m "Merge from main"
+            git checkout main
             git merge << pipeline.git.revision >>
             git push
 
