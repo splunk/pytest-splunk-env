@@ -3,14 +3,13 @@
 version: 2.1
 orbs:
   go: circleci/go@0.2.0
+  win: circleci/windows@2.4.0
 
 executors:
   linux: # linux executor using the node base image
-    docker:
-      - image: cimg/node
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+    machine:
+      image: ubuntu-1604:202007-01
+      docker_layer_caching: true
   windows: win/default # windows executor - uses the default executor from the windows orb
   macos: # macos executor using xcode 11.6
     macos:
@@ -23,9 +22,7 @@ jobs:
         type: executor
       python:
         type: string
-    machine:
-      image: ubuntu-1604:202007-01
-      docker_layer_caching: true
+    executor: << parameters.os >>
     resource_class: xlarge
     steps:
       - checkout
