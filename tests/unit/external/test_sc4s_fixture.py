@@ -2,9 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from utils import *
 import logging
-
 
 def test_sc4s_fixture_compose(request, testdir, caplog):
     caplog.set_level(logging.INFO)
