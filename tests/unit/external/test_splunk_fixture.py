@@ -6,8 +6,8 @@ import pytest
 import pathlib
 
 
-def test_splunk_fixture_external(request, testdir):
-
+def test_splunk_fixture_external(request, caplog,testdir):
+    caplog.set_level(logging.INFO)    
     testdir.makepyfile(
         """
         import pytest
