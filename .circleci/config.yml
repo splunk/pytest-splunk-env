@@ -124,7 +124,46 @@ jobs:
       - store_test_results:
           path: test-results
 
-  publish-pypi:
+  tag:
+    parameters:
+      semtag:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "<< parameters.semtag >>"
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: TAG
+          command: |
+            ./semtag ${SEMTAG} -f
+
+  merge-beta-to-master:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: Merge
+          command: |
+            git config --global user.email "addonreleasesrv@splunk.com"
+            git config --global user.name "Add on release service"
+            git pull origin master
+            git merge master -m "Merge from master"
+            git checkout master
+            git merge << pipeline.git.revision >>
+            git push
+
+  publish:
     docker:
       - image: circleci/python:3.7
     steps:
@@ -180,90 +219,114 @@ workflows:
           filters:
             branches:
               only: /.*/
-  #     - splunk-release/tag:
-  #         name: tag-alpha
-  #         tag_level: a
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         filters:
-  #           branches:
-  #             only: develop
-  #     - approval-tag-beta:
-  #         requires:
-  #           - tag-alpha
-  #         type: approval
-  #         filters:
-  #           branches:
-  #             only: develop
-  #     - splunk-release/tag:
-  #         name: tag-beta
-  #         tag_level: b
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         requires:
-  #           - approval-tag-beta
-  #     - approval-merge-beta-to-master:
-  #         requires:
-  #           - tag-beta
-  #         type: approval
-  #         filters:
-  #           branches:
-  #             only: develop
-  #     - splunk-release/merge-to-master:
-  #         name: merge-beta-to-master
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         requires:
-  #           - approval-merge-beta-to-master
-  #         filters:
-  #           branches:
-  #             only: develop
-  #     - splunk-release/tag:
-  #         name: tag-candidate
-  #         tag_level: candidate
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         filters:
-  #           branches:
-  #             only: master
-  #     - approval-tag-final-major:
-  #         type: approval
-  #         requires:
-  #           - tag-candidate
-  #     - splunk-release/tag:
-  #         name: tag-final-major
-  #         tag_level: final -s major
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         requires:
-  #           - approval-tag-final-major
-  #     - approval-tag-final-minor:
-  #         type: approval
-  #         requires:
-  #           - tag-candidate
-  #     - splunk-release/tag:
-  #         name: tag-final-minor
-  #         tag_level: final -s minor
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         requires:
-  #           - approval-tag-final-minor
-  #     - approval-tag-final-patch:
-  #         type: approval
-  #         requires:
-  #           - tag-candidate
-  #     - splunk-release/tag:
-  #         name: tag-final-patch
-  #         tag_level: final -s patch
-  #         gh_user: ${GH_USER}
-  #         gh_token: ${GH_PAT}
-  #         requires:
-  #           - approval-tag-final-patch
-  # publish:
-  #   jobs:
-  #     - publish-pypi:
-  #         filters:
-  #           branches:
-  #             ignore: /.*/
-  #           tags:
-  #             only: /^v\d*\.\d*\.\d*.*$/
+      - tag:
+          name: tag-alpha
+          requires:
+            - test-compose
+            - test-external
+          semtag: a
+          filters:
+            branches:
+              only: develop
+
+  release:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*.*$/
+      - approval-tag-beta:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-a\.\d+/
+      - tag:
+          name: tag-beta
+          semtag: b
+          requires:
+            - approval-tag-beta
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-a\.\d+/
+      - approval-merge-beta-to-master:
+          requires:
+            - publish
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - merge-beta-to-master:
+          requires:
+            - approval-merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - approval-tag-final-major:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
+          requires:
+            - approval-tag-final-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
+          requires:
+            - approval-tag-final-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
+          requires:
+            - approval-tag-final-patch
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-b\.\d+/
