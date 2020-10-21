@@ -8,7 +8,7 @@ import logging
 
 def test_sc4s_fixture_compose(request, testdir, caplog):
     caplog.set_level(logging.INFO)
-    setup_test_dir(testdir)
+    
     testdir.makepyfile(
         """
         import pytest
