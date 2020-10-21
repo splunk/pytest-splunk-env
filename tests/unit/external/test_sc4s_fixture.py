@@ -16,10 +16,10 @@ def test_sc4s_fixture_compose(request, testdir, caplog):
 
         def test_sc4s_mapped_port(splunk_setup, sc4s):
             ip,tcp = sc4s.get_service(514)
-            assert  tcp != "514"
+            assert  tcp == "514"
             ip,udp = sc4s.get_service(514,True)
-            assert  udp != "514"
-            assert tcp != udp
+            assert  udp == "514"
+            assert tcp == udp
 """)
 
     result = testdir.runpytest(
