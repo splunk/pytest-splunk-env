@@ -18,7 +18,7 @@ jobs:
           command: |
             #curl https://pyenv.run | bash
             #exec $SHELL
-            pyenv install << parameters.python >>
+            pyenv install -s << parameters.python >>
             pyenv local << parameters.python >>
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
       - run:
