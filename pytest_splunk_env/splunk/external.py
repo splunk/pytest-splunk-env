@@ -37,7 +37,7 @@ class SplunkEnvExternal(SplunkEnv):
             web_port="8000",
             username=username,
             password=password,
-            s2s_scheme=None,
+            s2s_scheme=hec_scheme,
             s2s_host=s2s_host,
             s2s_port=s2s_port,
             s2s_validate=s2s_validate,
