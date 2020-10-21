@@ -58,7 +58,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--splunk-forwarder-host",
         action="store",
-        dest="splunk_forwarder_host",
+        dest="splunk_forwarder_host",        
         help=(
             "Address of the Splunk Forwarder Server. Do not provide "
             "http scheme in the host."
@@ -254,6 +254,11 @@ def splunk_external(request):
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Checking Splunk")
+    if not request.config.getoption("splunk_forwarder_host"):
+        forwarder_host = request.config.getoption("splunk_host")
+    else:
+        forwarder_host = request.config.getoption("splunk_forwarder_host")
+
     return SplunkEnvExternal(
         search_index=request.config.getoption("search_index"),
         search_retry=request.config.getoption("search_retry"),

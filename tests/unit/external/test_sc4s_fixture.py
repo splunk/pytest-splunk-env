@@ -25,7 +25,6 @@ def test_sc4s_fixture_compose(request, testdir, caplog):
     result = testdir.runpytest(
         "--splunk-type=external",
         f'--splunk-host={request.config.getoption("test_splunk_host")}',
-        f'--splunk-forwarder-host={request.config.getoption("test_splunk_host")}',
         "--sc4s-type=external",
         f'--sc4s-host={request.config.getoption("test_sc4s_host")}'
        )
