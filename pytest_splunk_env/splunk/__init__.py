@@ -25,7 +25,7 @@ def pytest_addoption(parser):
 
     group = parser.getgroup("splunk-env")
 
- group.addoption(
+    group.addoption(
         "--splunk-app",
         action="store",
         dest="splunk_app",
