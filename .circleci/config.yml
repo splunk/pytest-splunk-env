@@ -51,7 +51,7 @@ jobs:
           destination: test-results
       - store_test_results:
           path: test-results
-  test-remote:
+  test-external:
     parameters:
       python:
         type: string
@@ -107,8 +107,10 @@ jobs:
             poetry-dynamic-versioning
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
-            poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml -n auto \
+            poetry run pytest tests/unit/external -v --tb=long --junitxml=test-results/test.xml -n auto \
+              --splunk-type=external
               --splunk-host=splunk \
+              --sc4s-type=external
               --sc4s-host=sc4s
 
       - store_artifacts:
@@ -162,7 +164,7 @@ workflows:
           filters:
             branches:
               only: /.*/
-      - test-remote:
+      - test-external:
           matrix:
             parameters:
               python: ["3.7.9"]
