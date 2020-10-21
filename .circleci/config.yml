@@ -10,6 +10,7 @@ executors:
     machine:
       image: ubuntu-1604:202007-01
       docker_layer_caching: true
+    resource_class: xlarge
   windows: win/default # windows executor - uses the default executor from the windows orb
   macos: # macos executor using xcode 11.6
     macos:
@@ -23,7 +24,6 @@ jobs:
       python:
         type: string
     executor: << parameters.os >>
-    resource_class: xlarge
     steps:
       - checkout
       - run: git submodule sync
