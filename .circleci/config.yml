@@ -13,11 +13,12 @@ jobs:
       image: ubuntu-1604:202007-01
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+      - run: pyenv versions
       - run:
           name: Install Tools
           command: |
-            #curl https://pyenv.run | bash
-            #exec $SHELL
             pyenv install -s << parameters.python >>
             pyenv local << parameters.python >>
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
