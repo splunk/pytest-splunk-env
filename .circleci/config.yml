@@ -17,7 +17,6 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init
       - run: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
-      - run: pyenv install -l
       - run:
           name: Install Tools
           command: |
@@ -80,7 +79,7 @@ workflows:
       - test-compose:
           matrix:
             parameters:
-              python: ["3.7.8", "3.8.3", "3.9.0b5"]
+              python: ["3.7.9", "3.8.6", "3.9.0"]
           filters:
             branches:
               only: /.*/
