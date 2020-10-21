@@ -16,7 +16,6 @@ jobs:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init
-      - run: pyenv versions
       - run:
           name: Install Tools
           command: |
@@ -30,7 +29,13 @@ jobs:
             source $HOME/.poetry/env
             poetry run poetry-dynamic-versioning
             poetry install --no-ansi -E docker
-            poetry run pytest tests/unit/docker-compose
+            mkdir -p test-results || true
+            poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
 
   publish-pypi:
     docker:
