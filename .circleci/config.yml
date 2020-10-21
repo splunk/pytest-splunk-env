@@ -11,9 +11,7 @@ executors:
       image: ubuntu-1604:202007-01
       docker_layer_caching: true
     resource_class: xlarge
-  windows: 
-    win/default:
-      shell: powershell.exe
+  windows: win/default
   macos: # macos executor using xcode 11.6
     macos:
       xcode: 12
@@ -94,7 +92,7 @@ workflows:
       - test-compose:
           matrix:
             parameters:
-              os: [linux, windows]
+              os: [linux]
               python: ["3.7.9", "3.8.6", "3.9.0"]
           filters:
             branches:
