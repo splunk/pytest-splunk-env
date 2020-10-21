@@ -37,5 +37,5 @@ class SC4SEnv():
         if not result:
             raise Exception()
 
-    def get_service(self, port, proto):
+    def get_service(self, port, udp=False):
         return self.sc4s_host, port
