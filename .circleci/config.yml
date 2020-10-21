@@ -12,6 +12,7 @@ executors:
       docker_layer_caching: true
     resource_class: xlarge
   windows: win/default # windows executor - uses the default executor from the windows orb
+      shell: bash.exe
   macos: # macos executor using xcode 11.6
     macos:
       xcode: 12
@@ -91,7 +92,7 @@ workflows:
       - test-compose:
           matrix:
             parameters:
-              os: [linux, windows, macos]
+              os: [linux, windows]
               python: ["3.7.9", "3.8.6", "3.9.0"]
           filters:
             branches:
