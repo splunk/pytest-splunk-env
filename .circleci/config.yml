@@ -16,6 +16,7 @@ jobs:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init
+      - run: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
       - run:
           name: Install Tools
           command: |
