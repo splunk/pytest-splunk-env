@@ -30,7 +30,7 @@ jobs:
             poetry run poetry-dynamic-versioning
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
-            poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml
+            poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml -n auto
       - store_artifacts:
           path: test-results
           destination: test-results
