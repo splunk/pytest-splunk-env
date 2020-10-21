@@ -4,7 +4,7 @@
 
 import pytest
 import pathlib
-
+import logging
 
 def test_splunk_fixture_external(request, caplog,testdir):
     caplog.set_level(logging.INFO)    
