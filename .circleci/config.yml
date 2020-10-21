@@ -37,6 +37,9 @@ jobs:
             pyenv local << parameters.python >>
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
       - run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+      - restore_cache:
+          keys:
+            - poetry-cache-<< parameters.python >>-{{ checksum "poetry.lock" }}
       - run:
           name: Build
           command: |
@@ -47,6 +50,10 @@ jobs:
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
             poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml -n auto
+      - save_cache:
+          key: poetry-cache-<< parameters.python >>-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/.poetry
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -107,6 +114,9 @@ jobs:
           name: Install Tools
           command: |
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - restore_cache:
+          keys:
+            - poetry-cache-<< parameters.python >>-{{ checksum "poetry.lock" }}
       - run:
           name: Build
           command: |
@@ -230,6 +240,8 @@ workflows:
   release:
     jobs:
       - publish:
+          context:
+            - gdi-addon-python
           filters:
             branches:
               ignore: /.*/
