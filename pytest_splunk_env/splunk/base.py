@@ -47,7 +47,7 @@ class SplunkEnv():
                  ):
 
         LOGGER.info(
-            f"Docker container splunk info. host={splunkd_host}, port={splunkd_port}, port_web={web_port} port_hec={hec_port} port_s2s={s2s_port}",
+            f"Splunk info. host={splunkd_host}, port={splunkd_port}, port_web={web_port} port_hec={hec_port} port_s2s={s2s_port}",
         )
         self.search_index = search_index
         self.search_retry = search_retry
