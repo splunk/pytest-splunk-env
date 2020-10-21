@@ -15,6 +15,11 @@ def test_splunk_fixture_external(request, caplog,testdir):
         def test_splunk_no_params(splunk_setup):
             assert True
 """)
-    result = testdir.runpytest("--splunk-type=external")
+    result = testdir.runpytest(
+        "--splunk-type=external",
+        "--splunk-host=splunk",
+        "--sc4s-type=external",
+        "--sc4s-host=sc4s"
+        )
     # we should have two passed tests and one failed (unarametrized one)
     result.assert_outcomes(passed=1)

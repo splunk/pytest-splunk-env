@@ -36,6 +36,7 @@ jobs:
             pyenv install -s << parameters.python >>
             pyenv local << parameters.python >>
             curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
       - run:
           name: Build
           command: |
@@ -113,11 +114,7 @@ jobs:
             poetry-dynamic-versioning
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
-            poetry run pytest tests/unit/external -v --tb=long --junitxml=test-results/test.xml -n auto \
-              --splunk-type=external
-              --splunk-host=splunk \
-              --sc4s-type=external
-              --sc4s-host=sc4s
+            poetry run pytest tests/unit/external -v --tb=long --junitxml=test-results/test.xml -n auto
 
       - store_artifacts:
           path: test-results
