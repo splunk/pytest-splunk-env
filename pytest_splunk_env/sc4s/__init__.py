@@ -123,7 +123,7 @@ def sc4s_docker(
 
 
 @pytest.fixture(scope="session")
-def sc4s_external(request, splunk):
+def sc4s_external(request, splunk_setup):
     """
     This fixture provides the connection properties to Splunk based on the pytest args
 
@@ -131,18 +131,9 @@ def sc4s_external(request, splunk):
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Checking Splunk")
-    return EnvExternal(
-        search_index=request.config.getoption("search_index"),
-        search_retry=request.config.getoption("search_retry"),
-        search_interval=request.config.getoption("search_interval"),
-        splunkd_host=request.config.getoption("splunk_host"),
-        splunkd_port=request.config.getoption("splunkd_port"),
-        web_port=request.config.getoption("splunk_web"),
-        username=request.config.getoption("splunk_user"),
-        password=request.config.getoption("splunk_password"),
-        hec_token=request.config.getoption(
-            "splunk_hec_token"),
-
+    return SC4SEnvExternal(splunk_setup,
+        request.config.getoption("sc4s_host")
+        
     )
 
 
