@@ -57,11 +57,14 @@ jobs:
         type: string
     docker:
       - image: circleci/python:<< parameters.python >>
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
       - image: splunk/scs:latest
         name: sc4s
         auth:
-          username: $GITHUB_USER
-          password: $GITHUB_TOKEN
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
         environment:
           SPLUNK_HEC_URL: https://splunk:8088
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
@@ -87,6 +90,9 @@ jobs:
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
       - image: splunk/splunk:latest
         name: splunk
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_TOKEN
         environment:
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SPLUNK_PASSWORD: Changed@11
@@ -157,6 +163,8 @@ workflows:
   build:
     jobs:
       - test-compose:
+          context:
+            - gdi-addon-python
           matrix:
             parameters:
               os: [linux]
@@ -165,6 +173,8 @@ workflows:
             branches:
               only: /.*/
       - test-external:
+          context:
+            - gdi-addon-python
           matrix:
             parameters:
               python: ["3.7.9"]
