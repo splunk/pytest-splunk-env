@@ -265,7 +265,7 @@ def splunk_external(request):
         password=request.config.getoption("splunk_password"),
         hec_scheme=request.config.getoption("splunk_hec_scheme"),
         hec_host=request.config.getoption("splunk_forwarder_host"),
-        hec_port=request.config.getoption("splunk_hec_port"),
+        hec_port=request.config.getoption("splunk_hec"),
         hec_validate=False,
         hec_token=request.config.getoption(
             "splunk_hec_token"),
