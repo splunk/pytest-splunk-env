@@ -114,7 +114,9 @@ jobs:
             poetry-dynamic-versioning
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
-            poetry run pytest tests/unit/external -v --tb=long --junitxml=test-results/test.xml -n auto
+            poetry run pytest tests/unit/external -v --tb=long --junitxml=test-results/test.xml -n auto \
+              --test-splunk-host=splunk \
+              --test-sc4s-host=sc4s
 
       - store_artifacts:
           path: test-results
