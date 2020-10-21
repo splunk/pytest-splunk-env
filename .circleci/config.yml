@@ -26,8 +26,8 @@ jobs:
       - run:
           name: Build
           command: |
-            pip install poetry-dynamic-versioning tomlkit
-            run poetry-dynamic-versioning
+            pip3 install poetry-dynamic-versioning tomlkit
+            poetry-dynamic-versioning
             source $HOME/.poetry/env
             pyenv local << parameters.python >>
             poetry install --no-ansi -E docker
