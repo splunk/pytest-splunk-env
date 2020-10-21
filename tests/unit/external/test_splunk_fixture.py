@@ -17,9 +17,9 @@ def test_splunk_fixture_external(request, caplog,testdir):
 """)
     result = testdir.runpytest(
         "--splunk-type=external",
-        "--splunk-host=splunk",
+        f'--splunk-host={request.config.getoption("test_splunk_host")}',
         "--sc4s-type=external",
-        "--sc4s-host=sc4s"
+        f'--sc4s-host={request.config.getoption("test_sc4s_host")}'
         )
     # we should have two passed tests and one failed (unarametrized one)
     result.assert_outcomes(passed=1)
