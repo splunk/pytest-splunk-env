@@ -17,6 +17,7 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init
       - run: cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
+      - run: pyenv install -l
       - run:
           name: Install Tools
           command: |
