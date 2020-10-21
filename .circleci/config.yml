@@ -26,8 +26,9 @@ jobs:
           name: Build
           command: |
             pip install poetry-dynamic-versioning tomlkit
+            run poetry-dynamic-versioning
             source $HOME/.poetry/env
-            poetry run poetry-dynamic-versioning
+            pyenv local << parameters.python >>
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
             poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml -n auto
@@ -77,7 +78,7 @@ workflows:
       - test-compose:
           matrix:
             parameters:
-              python: ["3.7.8", "3.8.3", "3.9.0"]
+              python: ["3.7.8", "3.8.3", "3.9.0b5"]
           filters:
             branches:
               only: /.*/
