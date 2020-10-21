@@ -13,7 +13,8 @@ executors:
     resource_class: xlarge
   windows:
     name: win/default
-    shell: powershell.exe
+    machine:
+      shell: powershell.exe
   macos: # macos executor using xcode 11.6
     macos:
       xcode: 12
