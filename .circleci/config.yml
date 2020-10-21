@@ -91,6 +91,7 @@ jobs:
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
+    resource_class: xlarge
     steps:
       - checkout
       - run: git submodule sync
@@ -104,8 +105,6 @@ jobs:
           command: |
             pip3 install poetry-dynamic-versioning tomlkit
             poetry-dynamic-versioning
-            source $HOME/.poetry/env
-            pyenv local << parameters.python >>
             poetry install --no-ansi -E docker
             mkdir -p test-results || true
             poetry run pytest tests/unit/docker-compose -v --tb=long --junitxml=test-results/test.xml -n auto \
