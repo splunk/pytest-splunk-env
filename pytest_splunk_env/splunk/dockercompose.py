@@ -8,6 +8,7 @@ from .base import SplunkEnv
 from .external import SplunkEnvExternal
 import splunklib.client as client
 import logging
+from pathlib import Path
 LOGGER = logging.getLogger(__name__)
 
 
@@ -21,10 +22,17 @@ class SplunkEnvDockerCompose(SplunkEnv):
                  username,
                  password,
                  hec_token,
-                 splunk_version
+                 splunk_version,
+                 splunk_app
                  ):
 
         # Env vars are used to pass config to splunk
+        try:
+            if not os.path.isdir(splunk_app):
+                os.makedirs(splunk_app)
+        except:
+            pass
+        os.environ["SPLUNK_APP_PACKAGE"] = splunk_app
         os.environ["SPLUNK_HEC_TOKEN"] = hec_token
         os.environ["SPLUNK_USER"] = username
         os.environ["SPLUNK_PASSWORD"] = password

@@ -222,7 +222,9 @@ def splunk_docker_compose(
                                       hec_token=request.config.getoption(
                                           "splunk_hec_token"),
                                       splunk_version=request.config.getoption(
-                                          "splunk_version")
+                                          "splunk_version"),
+                                      splunk_app=request.config.getoption(
+                                          "splunk_app")
                                       )
 
 
