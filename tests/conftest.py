@@ -5,6 +5,7 @@
 import pytest
 import os
 pytest_plugins = ["pytester"]
+import configparser
 
 
 @pytest.fixture(scope='session')
@@ -43,3 +44,15 @@ def pytest_addoption(parser):
             "http scheme in the host. default is 127.0.0.1"
         ),
     )    
+
+
+
+def pytest_generate_tests(metafunc):
+    if "splunk_version" in metafunc.fixturenames:
+        config = configparser.ConfigParser()
+        config.read(
+            'deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf')
+        splunk_versions = []
+        for v in config.sections():
+            splunk_versions.append(config[v]['VERSION'])
+        metafunc.parametrize("splunk_version", splunk_versions)

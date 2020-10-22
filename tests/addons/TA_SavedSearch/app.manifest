@@ -1,10 +1,10 @@
 {
   "schemaVersion": "2.0.0",
   "info": {
-    "title": "TA_fiction",
+    "title": "TA_SavedSearch",
     "id": {
       "group": null,
-      "name": "TA_fiction",
+      "name": "TA_SavedSearch",
       "version": "0.0.0-dev"
     },
     "author": [
