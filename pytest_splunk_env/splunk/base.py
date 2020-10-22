@@ -250,5 +250,36 @@ class SplunkEnv():
             )
             return False
 
-    def splunk_search():
-        return self.search_util
+
+
+    def splunk_rest_uri(self):
+        """
+        Provides a uri to the Splunk rest port
+        """
+        splunk_session = requests.Session()
+        splunk_session.auth = (self.username, self.password)
+        uri = f'{self.splunkd_scheme}://{self.splunkd_host}:{self.splunkd_port}/'
+        LOGGER.debug("Fetched splunk_rest_uri=%s", uri)
+
+        return splunk_session, uri
+
+    def splunk_hec_uri(self):
+        """
+        Provides a uri to the Splunk hec port
+        """
+        splunk_session = requests.Session()
+        splunk_session.headers = {
+            "Authorization": f'Splunk {self.hec_token}'
+        }
+        uri = f'{self.hec_scheme}://{self.hec_host}:{self.hec_port}/services/collector'
+        LOGGER.info("Fetched splunk_hec_uri=%s", uri)
+
+        return splunk_session, uri
+
+    def splunk_web_uri(self):
+        """
+        Provides a uri to the Splunk web port
+        """
+        uri = f'{self.web_scheme}://{self.splunkd_host}:{self.web_port}/'
+        LOGGER.info("Fetched splunk_web_uri=%s", uri)
+        return uri
