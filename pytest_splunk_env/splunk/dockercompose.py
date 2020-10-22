@@ -9,6 +9,7 @@ from .external import SplunkEnvExternal
 import splunklib.client as client
 import logging
 from pathlib import Path
+import configparser
 LOGGER = logging.getLogger(__name__)
 
 
@@ -34,6 +35,17 @@ class SplunkEnvDockerCompose(SplunkEnv):
             pass
         os.environ["SPLUNK_APP_PACKAGE"] = splunk_app
         os.environ["SPLUNK_HEC_TOKEN"] = hec_token
+        try:
+            config = configparser.ConfigParser()
+            config.read(
+                os.path.join(
+                    splunk_app, "default", "app.conf",
+                )
+            )
+            os.environ["SPLUNK_APP_ID"] = config["package"]["id"]
+        except Exception as e:
+            pass
+            os.environ["SPLUNK_APP_ID"] = "TA_package"
         os.environ["SPLUNK_USER"] = username
         os.environ["SPLUNK_PASSWORD"] = password
         os.environ["SPLUNK_VERSION"] = splunk_version

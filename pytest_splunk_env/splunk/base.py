@@ -88,13 +88,13 @@ class SplunkEnv():
         )
 
         LOGGER.info("Login to Splunk")
-        self.cloud_splunk = CloudSplunk(
+        self.client = CloudSplunk(
             splunkd_host=self.splunkd_host,
             splunkd_port=self.splunkd_port,
             username=self.username,
             password=self.password,
         )
-        self.conn = self.cloud_splunk.create_logged_in_connector()
+        self.conn = self.client.create_logged_in_connector()
         self.jobs = Jobs(self.conn)
         LOGGER.info("initialized SearchUtil for the Splunk instace.")
         self.search_util = SearchUtil(self.jobs, LOGGER)
