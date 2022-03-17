@@ -2,31 +2,28 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import print_function
 
 from future import standard_library
 
 standard_library.install_aliases()
-from builtins import str
-from builtins import object
-import logging
-import json
-import os
 import http.client
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import json
+import logging
+import os
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 
-from pytest_splunk_env.splunk.helmut.splunk_factory.splunkfactory import SplunkFactory
 from pytest_splunk_env.splunk.helmut.connector.base import Connector
-
+from pytest_splunk_env.splunk.helmut.splunk_factory.splunkfactory import SplunkFactory
 from pytest_splunk_env.splunk.helmut.util.Constants import Constants as const
 
 LOGGER = logging.getLogger("alter helper log")
 import socket
 
 
-class AlertHelpers(object):
+class AlertHelpers:
     def __init__(self):
 
         global request_args
@@ -223,7 +220,7 @@ class AlertHelpers(object):
         REST endpoint
         """
         request_type = "POST"
-        print("user and context is {0} and {1}".format(user, context))
+        print(f"user and context is {user} and {context}")
         request_url = const.TestConstants["SAVED_SEARCH"].format(user, context)
         self.make_http_request(
             splunk,
@@ -321,7 +318,7 @@ class AlertHelpers(object):
         email_bcc_list, email format,adSearchResults to email,
         format in attachment, paper_size, paper_orientation,splunk logo
         """
-        conf = open(filename, "r")
+        conf = open(filename)
         f = conf.readlines()
         self.setup_mail_server(
             splunk, user, password, mail_server, mode=emailMode
@@ -352,11 +349,11 @@ class AlertHelpers(object):
                 splunk_logo=elements[10],
             )
 
-            print("Creating alert {0}".format(elements[0]))
-            print("file name is {0}".format(elements[13]))
+            print(f"Creating alert {elements[0]}")
+            print(f"file name is {elements[13]}")
 
             if elements[13].rstrip("\n") != "None":
-                with open(elements[13].rstrip("\n"), "r") as myfile:
+                with open(elements[13].rstrip("\n")) as myfile:
                     data = "".join(line for line in myfile)
                     self.addContentsToEmail(data)
 
@@ -470,15 +467,13 @@ class AlertHelpers(object):
 
         except urllib.error.HTTPError as err:
             LOGGER.error(
-                "Http error code is ({0}): {1} : {2}".format(
+                "Http error code is ({}): {} : {}".format(
                     err.code, err.errno, err.strerror
                 )
             )
         except http.client.ResponseNotReady as e:
             time.sleep(5)
-            LOGGER.warn(
-                "httplib.ResponseNotReady error happen, retry once. {e}".format(e=e)
-            )
+            LOGGER.warn(f"httplib.ResponseNotReady error happen, retry once. {e}")
             # retry one time
             try:
                 restconn = splunk.create_logged_in_connector(
@@ -489,4 +484,4 @@ class AlertHelpers(object):
                 )
                 return content
             except Exception as e:
-                LOGGER.error("Error happened, exception is {e}".format(e=e))
+                LOGGER.error(f"Error happened, exception is {e}")

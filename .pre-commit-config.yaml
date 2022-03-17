@@ -1,15 +1,22 @@
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
     hooks:
-      - id: check-yaml
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-  - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: "" # Use the sha / tag you want to point at
+    -   id: check-merge-conflict
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: debug-statements
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.1
     hooks:
-      - id: autopep8
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: "" # pick a git hash / tag to point to
+    -   id: pyupgrade
+        args: [--py37-plus]
+-   repo: https://github.com/psf/black
+    rev: 22.1.0
     hooks:
-      - id: flake8
+    -   id: black
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+    -   id: isort

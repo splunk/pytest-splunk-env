@@ -3,15 +3,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
-from filelock import FileLock
 import os
+
 import pytest
+from filelock import FileLock
 
 from .base import SplunkEnv
 from .docker import splunk_docker
+from .dockercompose import SplunkEnvDockerCompose
 from .external import SplunkEnvExternal
 from .local import SplunkEnvLocal
-from .dockercompose import SplunkEnvDockerCompose
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -58,7 +60,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--splunk-forwarder-host",
         action="store",
-        dest="splunk_forwarder_host",        
+        dest="splunk_forwarder_host",
         help=(
             "Address of the Splunk Forwarder Server. Do not provide "
             "http scheme in the host."
@@ -138,7 +140,7 @@ def pytest_addoption(parser):
             " 1) latest: latest Splunk Enterprise tagged by the https://github.com/splunk/docker-splunk"
             " 2) 8.0.0: GA release of 8.0.0."
         ),
-    )    
+    )
     group.addoption(
         "--search-index",
         action="store",
@@ -162,6 +164,7 @@ def pytest_addoption(parser):
         type=int,
         help="Time interval to wait before retrying the search query.",
     )
+
 
 @pytest.fixture(scope="session")
 def splunk(request):
@@ -192,9 +195,7 @@ def splunk(request):
 
 
 @pytest.fixture(scope="session")
-def splunk_docker_compose(
-    request, docker_services, tmp_path_factory
-):
+def splunk_docker_compose(request, docker_services, tmp_path_factory):
     """
 
     Splunk docker depends on lovely-pytest-docker to create the docker instance
@@ -206,24 +207,21 @@ def splunk_docker_compose(
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Starting docker_service=splunk")
-    fn = os.path.join(tmp_path_factory.getbasetemp().parent,
-                      "pytest_splunk_env_docker_compose.lock")
+    fn = os.path.join(
+        tmp_path_factory.getbasetemp().parent, "pytest_splunk_env_docker_compose.lock"
+    )
 
     with FileLock(str(fn)):
-        return SplunkEnvDockerCompose(docker_services, search_index=request.config.getoption("search_index"),
-                                      search_retry=request.config.getoption(
-                                          "search_retry"),
-                                      search_interval=request.config.getoption(
-                                          "search_interval"),
-                                      username=request.config.getoption(
-                                          "splunk_user"),
-                                      password=request.config.getoption(
-                                          "splunk_password"),
-                                      hec_token=request.config.getoption(
-                                          "splunk_hec_token"),
-                                      splunk_version=request.config.getoption(
-                                          "splunk_version")
-                                      )
+        return SplunkEnvDockerCompose(
+            docker_services,
+            search_index=request.config.getoption("search_index"),
+            search_retry=request.config.getoption("search_retry"),
+            search_interval=request.config.getoption("search_interval"),
+            username=request.config.getoption("splunk_user"),
+            password=request.config.getoption("splunk_password"),
+            hec_token=request.config.getoption("splunk_hec_token"),
+            splunk_version=request.config.getoption("splunk_version"),
+        )
 
 
 @pytest.fixture(scope="session")
@@ -240,8 +238,9 @@ def splunk_docker(
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Starting docker=splunk")
-    fn = os.path.join(tmp_path_factory.getbasetemp().parent,
-                      "pytest_splunk_env_docker.lock")
+    fn = os.path.join(
+        tmp_path_factory.getbasetemp().parent, "pytest_splunk_env_docker.lock"
+    )
     raise Exception
 
 
@@ -272,9 +271,7 @@ def splunk_external(request):
         hec_host=forwarder_host,
         hec_port=request.config.getoption("splunk_hec"),
         hec_validate=False,
-        hec_token=request.config.getoption(
-            "splunk_hec_token"),
-
+        hec_token=request.config.getoption("splunk_hec_token"),
     )
 
 
@@ -293,9 +290,7 @@ def splunk_local(request):
         search_interval=request.config.getoption("search_interval"),
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
-        hec_token=request.config.getoption(
-            "splunk_hec_token"),
-
+        hec_token=request.config.getoption("splunk_hec_token"),
     )
 
 

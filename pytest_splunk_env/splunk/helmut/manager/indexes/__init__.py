@@ -77,7 +77,7 @@ class Indexes(Manager, Collection):
 class IndexNotFound(RuntimeError):
     def __init__(self, index_name):
         self.index_name = index_name
-        super(IndexNotFound, self).__init__(self._error_message)
+        super().__init__(self._error_message)
 
     @property
     def _error_message(self):
@@ -91,11 +91,12 @@ class OperationError(Exception):
     pass
 
 
+from pytest_splunk_env.splunk.helmut.connector.rest import RESTConnector
+
 # We need to do this at the bottom to avoid import errors
 from pytest_splunk_env.splunk.helmut.connector.sdk import SDKConnector
-from pytest_splunk_env.splunk.helmut.connector.rest import RESTConnector
-from pytest_splunk_env.splunk.helmut.manager.indexes.sdk import SDKIndexesWrapper
 from pytest_splunk_env.splunk.helmut.manager.indexes.rest import RESTIndexesWrapper
+from pytest_splunk_env.splunk.helmut.manager.indexes.sdk import SDKIndexesWrapper
 
 _CONNECTOR_TO_WRAPPER_MAPPINGS = {
     SDKConnector: SDKIndexesWrapper,

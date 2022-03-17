@@ -9,17 +9,19 @@
 """
 from pytest_splunk_env.splunk.helmut.exceptions.confs import StanzaNotFound
 from pytest_splunk_env.splunk.helmut.manager.confs.stanza import Stanza
-from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import normalize_to_unicode
+from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
+    normalize_to_unicode,
+)
 
 
 class RESTStanzaWrapper(Stanza):
     """
-        This class is the associated subclass of Stanza to the L{RESTConnector}.
-        This represents and wraps a Stanza object using the Splunk REST API.
+    This class is the associated subclass of Stanza to the L{RESTConnector}.
+    This represents and wraps a Stanza object using the Splunk REST API.
     """
 
     def __init__(self, rest_conf, rest_stanza):
-        super(RESTStanzaWrapper, self).__init__(rest_conf, rest_stanza.name)
+        super().__init__(rest_conf, rest_stanza.name)
         self._raw_rest_stanza = rest_stanza
 
     @property

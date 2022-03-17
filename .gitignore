@@ -73,10 +73,12 @@ target/
 .python-version
 .venv
 .history
-.venv 
+.venv
 !deps/build
 
 # Vs Code Settings
 .vscode
 test_report.md
 pytest_splunk_env.egg-info/
+
+.idea/

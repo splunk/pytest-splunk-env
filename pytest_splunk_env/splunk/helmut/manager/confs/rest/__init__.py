@@ -8,14 +8,12 @@
 @since: 2018-05-01
 """
 import json
-from builtins import object
-from builtins import range
 
-from pytest_splunk_env.splunk.helmut.manager.confs import Confs
 from pytest_splunk_env.splunk.helmut.manager.confs import (
-    PATH_PERFIX,
     PATH_CONF,
+    PATH_PERFIX,
     PATH_PROPERTIES,
+    Confs,
 )
 from pytest_splunk_env.splunk.helmut.manager.confs.rest.conf import RESTConfWrapper
 from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
@@ -26,7 +24,7 @@ from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
 
 class RESTConfsWrapper(Confs):
     """
-        The Confs subclass that is associated with the RESTConnector.
+    The Confs subclass that is associated with the RESTConnector.
     """
 
     @property
@@ -93,7 +91,7 @@ class ConfNotFound(RuntimeError):
         @param conf: The name of the conf file that was missing.
         """
         self.conf = conf
-        super(ConfNotFound, self).__init__(self._error_message)
+        super().__init__(self._error_message)
 
     @property
     def _error_message(self):
@@ -106,7 +104,7 @@ class ConfNotFound(RuntimeError):
         return msg.format(conf=self.conf)
 
 
-class Configurations(object):
+class Configurations:
     """
     wraps a Config object using Splunk REST connector
     """

@@ -11,8 +11,8 @@ This module handles connections through the public python SDK.
 """
 import time
 
-from splunklib.binding import _NoAuthenticationToken, AuthenticationError
-from splunklib.client import Service, Endpoint
+from splunklib.binding import AuthenticationError, _NoAuthenticationToken
+from splunklib.client import Endpoint, Service
 
 from .base import Connector
 
@@ -93,7 +93,7 @@ class SDKConnector(Connector):
         @type app: str
         """
 
-        super(SDKConnector, self).__init__(
+        super().__init__(
             splunk, username=username, password=password, owner=owner, app=app
         )
         if namespace is not None and namespace != self.namespace:
@@ -214,12 +214,12 @@ class SDKConnector(Connector):
             # FAST-8222
         except AuthenticationError as err:
             self.logger.debug(
-                "SDKconnector %s:%s is NOT logged in" % (self.username, self.password)
+                f"SDKconnector {self.username}:{self.password} is NOT logged in"
             )
             return False
         else:
             self.logger.debug(
-                "SDKconnector %s:%s is logged in" % (self.username, self.password)
+                f"SDKconnector {self.username}:{self.password} is logged in"
             )
             return True
 

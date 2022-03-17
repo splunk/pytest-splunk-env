@@ -10,8 +10,7 @@
 
 from splunklib.client import HTTPError
 
-from pytest_splunk_env.splunk.helmut.manager.roles import RoleNotFound
-from pytest_splunk_env.splunk.helmut.manager.roles import Roles
+from pytest_splunk_env.splunk.helmut.manager.roles import RoleNotFound, Roles
 from pytest_splunk_env.splunk.helmut.manager.roles.sdk.role import SDKRoleWrapper
 
 
@@ -50,16 +49,14 @@ class SDKRolesWrapper(Roles):
             # Role already exists
             if not err.status == 409:
                 raise
-            self.logger.warn(
-                "Role %s already existed. HTTPError: %s" % (role_name, err)
-            )
+            self.logger.warn(f"Role {role_name} already existed. HTTPError: {err}")
 
     def delete_role(self, role_name):
         self.logger.info("Deleting role %s" % role_name)
         self._service.roles.delete(role_name)
 
     def update_role(self, role_name, **kwargs):
-        self.logger.info("Updating role %s with: %s" % (role_name, kwargs))
+        self.logger.info(f"Updating role {role_name} with: {kwargs}")
         self._service.roles[role_name].update(**kwargs).refresh()
 
     def __getitem__(self, role_name):

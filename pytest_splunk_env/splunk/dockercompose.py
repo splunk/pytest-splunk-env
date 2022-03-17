@@ -2,27 +2,30 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import pytest
+import logging
 import os
+
+import pytest
+import splunklib.client as client
+
 from .base import SplunkEnv
 from .external import SplunkEnvExternal
-import splunklib.client as client
-import logging
+
 LOGGER = logging.getLogger(__name__)
 
 
 class SplunkEnvDockerCompose(SplunkEnv):
-
-    def __init__(self,
-                 docker_services,
-                 search_index,
-                 search_retry,
-                 search_interval,
-                 username,
-                 password,
-                 hec_token,
-                 splunk_version
-                 ):
+    def __init__(
+        self,
+        docker_services,
+        search_index,
+        search_retry,
+        search_interval,
+        username,
+        password,
+        hec_token,
+        splunk_version,
+    ):
 
         # Env vars are used to pass config to splunk
         os.environ["SPLUNK_HEC_TOKEN"] = hec_token
@@ -44,5 +47,5 @@ class SplunkEnvDockerCompose(SplunkEnv):
             password=password,
             hec_host=docker_services.docker_ip,
             hec_port=docker_services.port_for("splunk", 8088),
-            hec_token=hec_token
+            hec_token=hec_token,
         )

@@ -52,19 +52,19 @@ class Jobs(Manager, Collection):
 class JobNotFound(RuntimeError):
     def __init__(self, sid):
         self.sid = sid
-        super(JobNotFound, self).__init__(self._error_message)
+        super().__init__(self._error_message)
 
     @property
     def _error_message(self):
-        return "Could not find a job with SID {sid}".format(sid=self.sid)
+        return f"Could not find a job with SID {self.sid}"
 
 
 # We need this at the bottom to avoid cyclic imports
 
-from pytest_splunk_env.splunk.helmut.connector.sdk import SDKConnector
 from pytest_splunk_env.splunk.helmut.connector.rest import RESTConnector
-from pytest_splunk_env.splunk.helmut.manager.jobs.sdk import SDKJobsWrapper
+from pytest_splunk_env.splunk.helmut.connector.sdk import SDKConnector
 from pytest_splunk_env.splunk.helmut.manager.jobs.rest import RESTJobsWrapper
+from pytest_splunk_env.splunk.helmut.manager.jobs.sdk import SDKJobsWrapper
 
 _CONNECTOR_TO_WRAPPER_MAPPINGS = {
     SDKConnector: SDKJobsWrapper,

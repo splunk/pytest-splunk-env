@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from pytest_splunk_env.splunk.helmut.manager.jobs.sdk import SDKJobWrapper
-from pytest_splunk_env.splunk.helmut.manager.saved_searches.saved_search import SavedSearch
+from pytest_splunk_env.splunk.helmut.manager.saved_searches.saved_search import (
+    SavedSearch,
+)
 
 
 class SDKSavedSearchWrapper(SavedSearch):
@@ -22,7 +24,7 @@ class SDKSavedSearchWrapper(SavedSearch):
         @param sdk_saved_search: The name of the new saved search.
         @type sdk_saved_search: String
         """
-        super(SDKSavedSearchWrapper, self).__init__(sdk_connector)
+        super().__init__(sdk_connector)
         self._raw_sdk_saved_search = sdk_saved_search
 
     def run(self, **kwargs):

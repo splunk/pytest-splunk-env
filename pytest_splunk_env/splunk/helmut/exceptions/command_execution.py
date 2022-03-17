@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+
 class CommandExecutionFailure(RuntimeError):
     """
     Generic exception for when a Splunk command fails to execute.
@@ -33,7 +34,7 @@ class CommandExecutionFailure(RuntimeError):
         self.stderr = stderr
         self.stdout = stdout
 
-        super(CommandExecutionFailure, self).__init__(self._error_message)
+        super().__init__(self._error_message)
 
     @property
     def _error_message(self):

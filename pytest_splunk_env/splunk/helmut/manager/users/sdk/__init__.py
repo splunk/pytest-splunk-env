@@ -9,8 +9,7 @@
 """
 from splunklib.client import HTTPError
 
-from pytest_splunk_env.splunk.helmut.manager.users import UserNotFound
-from pytest_splunk_env.splunk.helmut.manager.users import Users
+from pytest_splunk_env.splunk.helmut.manager.users import UserNotFound, Users
 from pytest_splunk_env.splunk.helmut.manager.users.sdk.user import SDKUserWrapper
 
 

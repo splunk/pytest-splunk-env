@@ -4,9 +4,10 @@
 
 import logging
 
+
 def test_sc4s_fixture_compose(request, testdir, caplog):
     caplog.set_level(logging.INFO)
-    
+
     testdir.makepyfile(
         """
         import pytest
@@ -18,12 +19,13 @@ def test_sc4s_fixture_compose(request, testdir, caplog):
             ip,tcp = sc4s.get_service(514)
             ip,udp = sc4s.get_service(514,True)
             assert True
-""")
+"""
+    )
 
     result = testdir.runpytest(
         "--splunk-type=external",
         f'--splunk-host={request.config.getoption("test_splunk_host")}',
         "--sc4s-type=external",
-        f'--sc4s-host={request.config.getoption("test_sc4s_host")}'
-       )
+        f'--sc4s-host={request.config.getoption("test_sc4s_host")}',
+    )
     result.assert_outcomes(passed=2)

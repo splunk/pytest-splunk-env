@@ -88,11 +88,12 @@ class Confs(Manager, Collection):
         pass
 
 
+from pytest_splunk_env.splunk.helmut.connector.rest import RESTConnector
+
 # We need to do this at the bottom to avoid import errors
 from pytest_splunk_env.splunk.helmut.connector.sdk import SDKConnector
-from pytest_splunk_env.splunk.helmut.connector.rest import RESTConnector
-from pytest_splunk_env.splunk.helmut.manager.confs.sdk import SDKConfsWrapper
 from pytest_splunk_env.splunk.helmut.manager.confs.rest import RESTConfsWrapper
+from pytest_splunk_env.splunk.helmut.manager.confs.sdk import SDKConfsWrapper
 
 _CONNECTOR_TO_WRAPPER_MAPPINGS = {
     SDKConnector: SDKConfsWrapper,

@@ -2,8 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from utils import *
 import logging
+
+from utils import *
 
 
 def test_sc4s_fixture_compose(request, testdir, caplog):
@@ -22,8 +23,10 @@ def test_sc4s_fixture_compose(request, testdir, caplog):
             ip,udp = sc4s.get_service(514,True)
             assert  udp != "514"
             assert tcp != udp
-""")
+"""
+    )
 
     result = testdir.runpytest(
-        "--splunk-type=docker-compose", "--sc4s-type=docker-compose", "--tb=long", "-v")
+        "--splunk-type=docker-compose", "--sc4s-type=docker-compose", "--tb=long", "-v"
+    )
     result.assert_outcomes(passed=2)
