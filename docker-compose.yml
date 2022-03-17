@@ -62,4 +62,3 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
-

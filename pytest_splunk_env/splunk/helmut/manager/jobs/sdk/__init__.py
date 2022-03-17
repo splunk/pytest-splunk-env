@@ -10,7 +10,7 @@ This module is a specialized version of the search_manager module for the SDK
 @since: 2011-11-23
 """
 
-from pytest_splunk_env.splunk.helmut.manager.jobs import Jobs, JobNotFound
+from pytest_splunk_env.splunk.helmut.manager.jobs import JobNotFound, Jobs
 from pytest_splunk_env.splunk.helmut.manager.jobs.sdk.job import SDKJobWrapper
 
 

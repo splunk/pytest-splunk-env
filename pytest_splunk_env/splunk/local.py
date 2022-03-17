@@ -2,23 +2,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import logging
+
 import pytest
+
 from .base import SplunkEnv
 from .external import SplunkEnvExternal
-import logging
+
 LOGGER = logging.getLogger(__name__)
 
 
 class SplunkEnvLocal(SplunkEnvExternal):
-
-    def __init__(self,
-                 search_index,
-                 search_retry,
-                 search_interval,
-                 username,
-                 password,
-                 hec_token
-                 ):
+    def __init__(
+        self, search_index, search_retry, search_interval, username, password, hec_token
+    ):
         super().__init__(
             search_index,
             search_retry,
@@ -28,5 +25,5 @@ class SplunkEnvLocal(SplunkEnvExternal):
             web_port="8000",
             username=username,
             password=password,
-            hec_token=hec_token
+            hec_token=hec_token,
         )

@@ -18,10 +18,11 @@ Meta
 from future import standard_library
 
 standard_library.install_aliases()
-from builtins import object
-import urllib.request, urllib.parse, urllib.error
 import datetime
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 
 TIMEOUT = 60
 POLL_FREQUENCY = 0.5
@@ -35,7 +36,7 @@ class TimeoutException(Exception):
     pass
 
 
-class RESTInPeace(object):
+class RESTInPeace:
     """
     Simple module to wrap REST endpoints into a consistent set of methods
     Everything is accessed through servicesNS.
@@ -214,7 +215,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_create.__name__ = "create_{ep}".format(ep=uri_name)
+        gen_create.__name__ = f"create_{uri_name}"
         setattr(self, gen_create.__name__, gen_create)
 
         def gen_get(id_name, sub_endpoint="", *args, **kwargs):
@@ -227,7 +228,7 @@ class RESTInPeace(object):
                 sub_ep=(
                     sub_endpoint
                     if (sub_endpoint == "" or sub_endpoint.startswith("/"))
-                    else "/{s}".format(s=sub_endpoint)
+                    else f"/{sub_endpoint}"
                 ),
             )
             return self.conn.make_request("GET", uri, args, kwargs)
@@ -246,14 +247,14 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_get.__name__ = "get_{ep}".format(ep=uri_name)
+        gen_get.__name__ = f"get_{uri_name}"
         setattr(self, gen_get.__name__, gen_get)
 
         def gen_reload(*args, **kwargs):
             """
             Get
             """
-            uri = "{uri}/_reload".format(uri=uri_value)
+            uri = f"{uri_value}/_reload"
             return self.conn.make_request("GET", uri, args, kwargs)
 
         gen_reload.__doc__ = """
@@ -269,7 +270,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_reload.__name__ = "reload_{ep}".format(ep=uri_name)
+        gen_reload.__name__ = f"reload_{uri_name}"
         setattr(self, gen_reload.__name__, gen_reload)
 
         def gen_get_all(*args, **kwargs):
@@ -289,7 +290,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_get_all.__name__ = "get_all_{ep}".format(ep=uri_name)
+        gen_get_all.__name__ = f"get_all_{uri_name}"
         setattr(self, gen_get_all.__name__, gen_get_all)
 
         def gen_edit(id_name, sub_endpoint="", urlparam=None, *args, **kwargs):
@@ -309,7 +310,7 @@ class RESTInPeace(object):
                 sub_ep=(
                     sub_endpoint
                     if (sub_endpoint == "" or sub_endpoint.startswith("/"))
-                    else "/{s}".format(s=sub_endpoint)
+                    else f"/{sub_endpoint}"
                 ),
             )
 
@@ -329,7 +330,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_edit.__name__ = "edit_{ep}".format(ep=uri_name)
+        gen_edit.__name__ = f"edit_{uri_name}"
         setattr(self, gen_edit.__name__, gen_edit)
 
         def gen_delete(id_name, *args, **kwargs):
@@ -352,7 +353,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_delete.__name__ = "delete_{ep}".format(ep=uri_name)
+        gen_delete.__name__ = f"delete_{uri_name}"
         setattr(self, gen_delete.__name__, gen_delete)
 
         def gen_check(id_name, *args, **kwargs):
@@ -388,7 +389,7 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_check.__name__ = "check_{ep}".format(ep=uri_name)
+        gen_check.__name__ = f"check_{uri_name}"
         setattr(self, gen_check.__name__, gen_check)
 
         def gen_wait_to_be_created(
@@ -548,7 +549,7 @@ class RESTInPeace(object):
                 sub_ep=(
                     sub_endpoint
                     if (sub_endpoint == "" or sub_endpoint.startswith("/"))
-                    else "/{s}".format(s=sub_endpoint)
+                    else f"/{sub_endpoint}"
                 ),
             )
             return self.conn.make_request("GET", uri, args, kwargs)
@@ -565,5 +566,5 @@ class RESTInPeace(object):
             """.format(
             ep=uri_name, uri=uri_value
         )
-        gen_run.__name__ = "run_{ep}".format(ep=uri_name)
+        gen_run.__name__ = f"run_{uri_name}"
         setattr(self, gen_run.__name__, gen_run)

@@ -2,20 +2,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import print_function
 
 from future import standard_library
 
 standard_library.install_aliases()
-import urllib.request, urllib.error, urllib.parse
-import logging
-import urllib.request, urllib.parse, urllib.error
-import threading
 import json
-
+import logging
 import os
-from pytest_splunk_env.splunk.helmut.util.Constants import Constants as const
+import threading
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from pytest_splunk_env.splunk.helmut.connector.base import Connector
+from pytest_splunk_env.splunk.helmut.util.Constants import Constants as const
 
 LOGGER = logging.getLogger("search helper log")
 
@@ -74,7 +74,7 @@ class SearchHelpers(threading.Thread):
         acl=None,
     ):
         """
-            usercontext:applicationcontext namespace
+        usercontext:applicationcontext namespace
         """
         LOGGER.info("Creating edit a saved search")
         request_url = const.TestConstants["EDIT_SAVED_SEARCH_USRCTX"].format(
@@ -229,8 +229,7 @@ class SearchHelpers(threading.Thread):
         splunk_pwd="changeme",
         acl=None,
     ):
-        """
-        """
+        """ """
         LOGGER.info("create new eventtype")
 
         eventtype_url = const.TestConstants["EDIT_EVENTTYPE"].format(appcontext)
@@ -270,8 +269,7 @@ class SearchHelpers(threading.Thread):
         splunk_pwd="changeme",
         acl=None,
     ):
-        """
-        """
+        """ """
         LOGGER.info("create field transform using interactive field extractor")
 
         ifx_url = const.TestConstants["EDIT_IFX"].format(appcontext)
@@ -315,8 +313,7 @@ class SearchHelpers(threading.Thread):
         splunk_pwd="changeme",
         acl=None,
     ):
-        """
-        """
+        """ """
         LOGGER.info("create field transform using interactive field extractor")
 
         ifx_url = const.TestConstants["EDIT_IFX_USRCTX"].format(usercontext, appcontext)
@@ -357,8 +354,7 @@ class SearchHelpers(threading.Thread):
         splunk_pwd="changeme",
         acl=None,
     ):
-        """
-        """
+        """ """
         source_url = const.TestConstants["SOURCE_TYPE_RENAME"].format(appcontext)
 
         if request_type == "POST":
@@ -393,8 +389,7 @@ class SearchHelpers(threading.Thread):
         splunk_pwd="changeme",
         acl=None,
     ):
-        """
-        """
+        """ """
         source_url = const.TestConstants["SOURCE_TYPE_RENAME_USRCXT"].format(
             usercontext, appcontext
         )
@@ -702,7 +697,7 @@ class SearchHelpers(threading.Thread):
 
         LOGGER.info("upload a lookup file")
         if acl == "sharing=global":
-            lookup_url = "/servicesNS/nobody/{0}/data/lookup-table-files".format(
+            lookup_url = "/servicesNS/nobody/{}/data/lookup-table-files".format(
                 appcontext
             )
         else:
@@ -714,7 +709,7 @@ class SearchHelpers(threading.Thread):
             "eai:data": lookup_path + os.sep + lookupfilename,
             "name": lookupfilename,
         }
-        cmd = 'cmd python -c "import os; os.makedirs(\\"{0}\\")"'.format(lookup_path)
+        cmd = f'cmd python -c "import os; os.makedirs(\\"{lookup_path}\\")"'
         (code, stdout, stderr) = splunk.execute(cmd)
         # copy lookup file to lookup_tmp folder in $splunk_home/var/run/splunk
         splunk._file_utils.send(lookupfilepath, lookup_path)
@@ -925,7 +920,7 @@ class SearchHelpers(threading.Thread):
 
         except urllib.error.HTTPError as err:
             print(
-                "Http error code is ({0}): {1} : {2}".format(
+                "Http error code is ({}): {} : {}".format(
                     err.code, err.errno, err.strerror
                 )
             )

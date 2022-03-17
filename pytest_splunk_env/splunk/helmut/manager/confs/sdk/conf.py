@@ -21,7 +21,7 @@ class SDKConfWrapper(Conf):
     """
 
     def __init__(self, sdk_connector, sdk_conf):
-        super(SDKConfWrapper, self).__init__(sdk_connector, sdk_conf.name)
+        super().__init__(sdk_connector, sdk_conf.name)
         self._raw_sdk_conf = sdk_conf
 
     @property
@@ -67,9 +67,7 @@ class SDKConfWrapper(Conf):
 
     def delete_stanza(self, stanza_name):
         try:
-            self.logger.info(
-                "Deleting stanza '%s' in %s.conf" % (stanza_name, self.name)
-            )
+            self.logger.info(f"Deleting stanza '{stanza_name}' in {self.name}.conf")
             self.raw_sdk_conf.delete(stanza_name)
         except HTTPError as h:
             self.logger.warn("Error during deletion: %s" % h)

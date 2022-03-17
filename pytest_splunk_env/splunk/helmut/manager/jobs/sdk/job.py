@@ -25,7 +25,7 @@ class SDKJobWrapper(Job):
         """
         self._raw_sdk_job = sdk_job
 
-        super(SDKJobWrapper, self).__init__(sdk_connector)
+        super().__init__(sdk_connector)
 
     @property
     def raw_sdk_job(self):
@@ -36,7 +36,7 @@ class SDKJobWrapper(Job):
         return self.raw_sdk_job.sid
 
     def __str__(self):
-        return "SDK Job with SID {sid}".format(sid=self.sid)
+        return f"SDK Job with SID {self.sid}"
 
     # Endpoint specific
 
@@ -86,7 +86,7 @@ class SDKJobWrapper(Job):
         return int(self.raw_sdk_job.refresh().content.ttl)
 
     def set_ttl(self, value):
-        self.logger.info("Setting job %s TTL to: %s" % (self.sid, value))
+        self.logger.info(f"Setting job {self.sid} TTL to: {value}")
         self.raw_sdk_job.set_ttl(value)
         return self
 
@@ -198,7 +198,7 @@ class SDKJobWrapper(Job):
         return self.raw_sdk_job.searchlog(**kwargs)
 
     def set_priority(self, value):
-        self.logger.info("Setting priority of job %s to: %s" % (self.sid, value))
+        self.logger.info(f"Setting priority of job {self.sid} to: {value}")
         self.raw_sdk_job.set_priority(value)
         return self
 

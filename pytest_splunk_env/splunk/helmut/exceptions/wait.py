@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+
 class WaitTimedOut(RuntimeError):
     """
     This exception is raised when a designated wait period times out.
@@ -9,7 +10,7 @@ class WaitTimedOut(RuntimeError):
 
     def __init__(self, seconds_waited):
         self.seconds_waited = seconds_waited
-        super(WaitTimedOut, self).__init__(self._error_message)
+        super().__init__(self._error_message)
 
     @property
     def _error_message(self):

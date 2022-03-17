@@ -2,19 +2,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import pytest
 import os
+
+import pytest
+
 pytest_plugins = ["pytester"]
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def docker_compose_files(pytestconfig):
     """Get the docker-compose.yml absolute path.
     Override this fixture in your tests if you need a custom location.
     """
-    return [
-        os.path.join(str(pytestconfig.rootdir), 'docker-compose.yml')
-    ]
+    return [os.path.join(str(pytestconfig.rootdir), "docker-compose.yml")]
+
 
 def pytest_addoption(parser):
     """Add options for interaction with Splunk this allows the tool to work in two modes
@@ -42,4 +43,4 @@ def pytest_addoption(parser):
             "Address of the Splunk Server where search queries will be executed. Do not provide "
             "http scheme in the host. default is 127.0.0.1"
         ),
-    )    
+    )

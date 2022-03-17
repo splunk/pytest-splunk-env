@@ -10,30 +10,31 @@
 from future import standard_library
 
 standard_library.install_aliases()
-from builtins import range
-from builtins import object
+import json
+import urllib.error
+import urllib.parse
+import urllib.request
+
 from splunklib.client import HTTPError
 
+from pytest_splunk_env.splunk.helmut.exceptions.confs import StanzaNotFound
+from pytest_splunk_env.splunk.helmut.manager.confs import COUNT_OFFSET, PATH_PERFIX
 from pytest_splunk_env.splunk.helmut.manager.confs.conf import Conf
 from pytest_splunk_env.splunk.helmut.manager.confs.rest.stanza import RESTStanzaWrapper
-from pytest_splunk_env.splunk.helmut.exceptions.confs import StanzaNotFound
-from pytest_splunk_env.splunk.helmut.manager.confs import PATH_PERFIX, COUNT_OFFSET
 from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
     normalize_to_str,
     normalize_to_unicode,
 )
-import json
-import urllib.request, urllib.parse, urllib.error
 
 
 class RESTConfWrapper(Conf):
     """
-       The L{Conf} object corresponding to a Conf object in the Splunk REST API.
-       It holds a set of L{RESTStanza}s.
+    The L{Conf} object corresponding to a Conf object in the Splunk REST API.
+    It holds a set of L{RESTStanza}s.
     """
 
     def __init__(self, rest_connector, rest_conf):
-        super(RESTConfWrapper, self).__init__(rest_connector, rest_conf.name)
+        super().__init__(rest_connector, rest_conf.name)
         self._raw_rest_conf = rest_conf
 
     @property
@@ -46,7 +47,9 @@ class RESTConfWrapper(Conf):
                 return stanza
         raise StanzaNotFound(self.name, stanza_name)
 
-    def stanzas_list(self,):
+    def stanzas_list(
+        self,
+    ):
         stanza_list = []
         url = PATH_PERFIX + self._raw_rest_conf.path + COUNT_OFFSET
         req_args = {"output_mode": "json"}
@@ -63,9 +66,7 @@ class RESTConfWrapper(Conf):
     def _create_stanza(self, stanza_name, **values):
         if stanza_name in self:
             return RestStanza(self.connector, self._raw_rest_conf, stanza_name)
-        values = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in values.items()
-        )
+        values = {normalize_to_str(k): normalize_to_str(v) for k, v in values.items()}
         stanza_name = normalize_to_str(stanza_name)
         url = PATH_PERFIX + self._raw_rest_conf.path
         user_args = {"name": stanza_name}
@@ -79,11 +80,7 @@ class RESTConfWrapper(Conf):
 
     def _delete_stanza(self, stanza_name):
         stanza_name = normalize_to_str(stanza_name)
-        url = (
-            PATH_PERFIX
-            + self._raw_rest_conf.path
-            + "/{stanza_name}".format(stanza_name=stanza_name)
-        )
+        url = PATH_PERFIX + self._raw_rest_conf.path + f"/{stanza_name}"
         self.connector.make_request("DELETE", url)
 
     def items(self):
@@ -92,10 +89,9 @@ class RESTConfWrapper(Conf):
 
     def create_stanza(self, stanza_name, values=None):
         values = values or {}
-        values = dict(
-            [normalize_to_unicode(k), normalize_to_unicode(v)]
-            for k, v in values.items()
-        )
+        values = {
+            normalize_to_unicode(k): normalize_to_unicode(v) for k, v in values.items()
+        }
         stanza_name = normalize_to_unicode(stanza_name)
         try:
             self.logger.info(
@@ -115,9 +111,7 @@ class RESTConfWrapper(Conf):
     def delete_stanza(self, stanza_name):
         stanza_name = normalize_to_unicode(stanza_name)
         try:
-            self.logger.info(
-                "Deleting stanza '%s' in %s.conf" % (stanza_name, self.name)
-            )
+            self.logger.info(f"Deleting stanza '{stanza_name}' in {self.name}.conf")
             self._delete_stanza(stanza_name)
         except HTTPError as h:
             self.logger.warn("Error during deletion: %s" % h)
@@ -125,7 +119,7 @@ class RESTConfWrapper(Conf):
             raise
 
 
-class RestStanza(object):
+class RestStanza:
     """
     wraps a Stanza object using Splunk REST connector
     """
@@ -145,9 +139,7 @@ class RestStanza(object):
 
     def _content(self):
         name = urllib.parse.quote_plus(self._name)
-        url = (
-            PATH_PERFIX + self.rest_conf.path + "{stanza_name}".format(stanza_name=name)
-        )
+        url = PATH_PERFIX + self.rest_conf.path + f"{name}"
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request("GET", url, req_args)
         assert response["status"] == "200"
@@ -155,24 +147,20 @@ class RestStanza(object):
         return parsed_content["entry"][0]["content"]
 
     def update(self, **values):
-        values = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in values.items()
-        )
+        values = {normalize_to_str(k): normalize_to_str(v) for k, v in values.items()}
         name = urllib.parse.quote_plus(self._name)
-        url = (
-            PATH_PERFIX + self.rest_conf.path + "{stanza_name}".format(stanza_name=name)
-        )
+        url = PATH_PERFIX + self.rest_conf.path + f"{name}"
         user_args = values
         response, content = self.connector.make_request(
             "POST", url, user_args, {"output_mode": "json"}
         )
         assert response["status"] == "200"
 
-    def refresh(self,):
+    def refresh(
+        self,
+    ):
         name = urllib.parse.quote_plus(self._name)
-        url = (
-            PATH_PERFIX + self.rest_conf.path + "{stanza_name}".format(stanza_name=name)
-        )
+        url = PATH_PERFIX + self.rest_conf.path + f"{name}"
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request("GET", url, req_args)
         assert response["status"] == "200"

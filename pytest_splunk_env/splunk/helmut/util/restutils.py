@@ -2,15 +2,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import print_function
 
 from future import standard_library
 
 standard_library.install_aliases()
-import urllib.request, urllib.error, urllib.parse
 import logging
-import urllib.request, urllib.parse, urllib.error
 import threading
+import urllib.error
+import urllib.parse
+import urllib.request
 
 from pytest_splunk_env.splunk.helmut.connector.base import Connector
 
@@ -91,7 +91,7 @@ class RestUtils(threading.Thread):
 
         except urllib.error.HTTPError as err:
             print(
-                "Http error code is ({0}): {1} : {2}".format(
+                "Http error code is ({}): {} : {}".format(
                     err.code, err.errno, err.strerror
                 )
             )

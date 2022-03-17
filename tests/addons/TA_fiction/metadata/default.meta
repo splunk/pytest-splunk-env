@@ -5,6 +5,6 @@
 access = read : [ * ], write : [ admin, power ]
 export = system
 
-# Do not export commands 
+# Do not export commands
 [commands]
 export = none

@@ -10,32 +10,33 @@
 from future import standard_library
 
 standard_library.install_aliases()
-from builtins import range
+import json
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta
+
 from future.utils import raise_
-from builtins import object
 from splunklib.client import HTTPError
 
-from pytest_splunk_env.splunk.helmut.manager.indexes import Indexes
-from pytest_splunk_env.splunk.helmut.manager.indexes.rest.index import RESTIndexWrapper
 from pytest_splunk_env.splunk.helmut.manager.indexes import (
-    IndexNotFound,
-    PATH_PERFIX,
     COUNT_OFFSET,
     DISABLE,
-    SYSTEM_MESSAGE,
-    RESTART,
     ENABLE,
+    PATH_PERFIX,
+    RESTART,
     ROLL_HOT_BUCKETS,
+    SYSTEM_MESSAGE,
+    Indexes,
+    IndexNotFound,
     OperationError,
 )
+from pytest_splunk_env.splunk.helmut.manager.indexes.rest.index import RESTIndexWrapper
 from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
     normalize_to_str,
     normalize_to_unicode,
 )
-import json
-import urllib.request, urllib.parse, urllib.error
-from datetime import datetime, timedelta
-import time
 
 
 class RESTIndexesWrapper(Indexes):
@@ -53,9 +54,7 @@ class RESTIndexesWrapper(Indexes):
             # Index already exists
             if not err.status == 409:
                 raise
-            self.logger.warn(
-                "Index '%s' already exists. HTTPError: %s" % (index_name, err)
-            )
+            self.logger.warn(f"Index '{index_name}' already exists. HTTPError: {err}")
         return self[index_name]
 
     def _create_index(self, index_name):
@@ -97,7 +96,7 @@ class RESTIndexesWrapper(Indexes):
         return [RESTIndexWrapper(self.connector, index) for index in indexes]
 
 
-class RestIndex(object):
+class RestIndex:
     """
     wraps a Index object using Splunk REST connector
     """
@@ -165,9 +164,7 @@ class RestIndex(object):
 
     def update(self, **kwargs):
         name = self.encode_name()
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         url = PATH_PERFIX + name
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request("POST", url, kwargs, req_args)
@@ -175,14 +172,14 @@ class RestIndex(object):
 
     def delete(self, **kwargs):
         name = self.encode_name()
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         url = PATH_PERFIX + name
         response, content = self.connector.make_request("DELETE", url)
         assert response["status"] == "200"
 
-    def roll_hot_buckets(self,):
+    def roll_hot_buckets(
+        self,
+    ):
         name = self.encode_name()
         url = PATH_PERFIX + name + ROLL_HOT_BUCKETS
         req_args = {"output_mode": "json"}

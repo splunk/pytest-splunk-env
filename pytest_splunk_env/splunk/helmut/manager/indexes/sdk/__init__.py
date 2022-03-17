@@ -9,8 +9,7 @@
 """
 from splunklib.client import HTTPError
 
-from pytest_splunk_env.splunk.helmut.manager.indexes import IndexNotFound
-from pytest_splunk_env.splunk.helmut.manager.indexes import Indexes
+from pytest_splunk_env.splunk.helmut.manager.indexes import Indexes, IndexNotFound
 from pytest_splunk_env.splunk.helmut.manager.indexes.sdk.index import SDKIndexWrapper
 
 
@@ -32,9 +31,7 @@ class SDKIndexesWrapper(Indexes):
             # Index already exists
             if not err.status == 409:
                 raise
-            self.logger.warn(
-                "Index '%s' already exists. HTTPError: %s" % (index_name, err)
-            )
+            self.logger.warn(f"Index '{index_name}' already exists. HTTPError: {err}")
         return self[index_name]
 
     def __getitem__(self, index_name):

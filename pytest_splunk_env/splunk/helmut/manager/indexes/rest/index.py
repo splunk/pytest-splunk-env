@@ -11,7 +11,9 @@ import time
 
 from pytest_splunk_env.splunk.helmut.exceptions.wait import WaitTimedOut
 from pytest_splunk_env.splunk.helmut.manager.indexes.index import Index
-from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import normalize_to_unicode
+from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import (
+    normalize_to_unicode,
+)
 
 
 class RESTIndexWrapper(Index):
@@ -30,7 +32,7 @@ class RESTIndexWrapper(Index):
         @param rest_index: The name of the new index.
         @type rest_index: String
         """
-        super(RESTIndexWrapper, self).__init__(rest_connector)
+        super().__init__(rest_connector)
         self._raw_rest_index = rest_index
 
     def get_total_event_count(self):
@@ -119,17 +121,15 @@ class RESTIndexWrapper(Index):
         self._raw_rest_index.enable()
 
     def edit(self, **kwargs):
-        kwargs = dict(
-            [normalize_to_unicode(k), normalize_to_unicode(v)]
-            for k, v in kwargs.items()
-        )
-        self.logger.info("Editing index %s with: %s" % (self.name, kwargs))
+        kwargs = {
+            normalize_to_unicode(k): normalize_to_unicode(v) for k, v in kwargs.items()
+        }
+        self.logger.info(f"Editing index {self.name} with: {kwargs}")
         self._raw_rest_index.update(**kwargs)
 
     def delete(self, **kwargs):
-        kwargs = dict(
-            [normalize_to_unicode(k), normalize_to_unicode(v)]
-            for k, v in kwargs.items()
-        )
-        self.logger.info("Deleting index %s with: %s" % (self.name, kwargs))
+        kwargs = {
+            normalize_to_unicode(k): normalize_to_unicode(v) for k, v in kwargs.items()
+        }
+        self.logger.info(f"Deleting index {self.name} with: {kwargs}")
         self._raw_rest_index.delete(**kwargs)

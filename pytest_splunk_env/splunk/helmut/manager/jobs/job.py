@@ -9,7 +9,6 @@
 """
 import time
 from abc import abstractmethod, abstractproperty
-from builtins import str
 
 from pytest_splunk_env.splunk.helmut.exceptions.search import SearchFailure
 from pytest_splunk_env.splunk.helmut.exceptions.wait import WaitTimedOut

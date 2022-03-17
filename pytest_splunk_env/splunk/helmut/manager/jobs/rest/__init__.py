@@ -9,20 +9,18 @@
 """
 
 import json
-from builtins import object
-from builtins import range
 
 from pytest_splunk_env.splunk.helmut.manager.jobs import (
-    Jobs,
-    JobNotFound,
-    PATH_PERFIX,
     CONTROL,
     EVENTS,
+    PATH_PERFIX,
     RESULTS,
     RESULTS_PREVIEW,
     SEARCHLOG,
     SUMMARY,
     TIMELINE,
+    JobNotFound,
+    Jobs,
 )
 from pytest_splunk_env.splunk.helmut.manager.jobs.rest.job import RESTJobWrapper
 from pytest_splunk_env.splunk.helmut.util.string_unicode_convert import normalize_to_str
@@ -38,9 +36,7 @@ class RESTJobsWrapper(Jobs):
         query = normalize_to_str(query)
         url = PATH_PERFIX
         user_args = {"search": query}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = user_args.copy()
         args.update(kwargs)
         response, content = self.connector.make_request(
@@ -80,7 +76,7 @@ class RESTJobsWrapper(Jobs):
         return [RestJob(self.connector, index_name) for index_name in job_list]
 
 
-class RestJob(object):
+class RestJob:
     """
     wraps a Job object using Splunk REST connector
     """
@@ -104,9 +100,7 @@ class RestJob(object):
 
     def update_search(self, **kwargs):
         sid = self._sid
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         url = PATH_PERFIX + sid
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request(
@@ -116,9 +110,7 @@ class RestJob(object):
 
     def delete_search(self, **kwargs):
         sid = self._sid
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         url = PATH_PERFIX + sid
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request(
@@ -128,9 +120,7 @@ class RestJob(object):
 
     def control_search(self, **kwargs):
         sid = self._sid
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         url = PATH_PERFIX + sid + CONTROL
         req_args = {"output_mode": "json"}
         response, content = self.connector.make_request(
@@ -143,9 +133,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + EVENTS
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         response, content = self.connector.make_request("GET", url, urlparam=args)
@@ -156,9 +144,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + RESULTS
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         # Refer to INFRA-17464, get search result should not be recorded in ..log,
@@ -173,9 +159,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + RESULTS_PREVIEW
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         # Refer to INFRA-17464, get search result preview should not be recorded in ..log,
@@ -190,9 +174,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + SEARCHLOG
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         response, content = self.connector.make_request("GET", url, urlparam=args)
@@ -203,9 +185,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + SUMMARY
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         response, content = self.connector.make_request("GET", url, urlparam=args)
@@ -215,9 +195,7 @@ class RestJob(object):
         sid = self._sid
         url = PATH_PERFIX + sid + TIMELINE
         req_args = {"output_mode": "json", "segmentation": "none"}
-        kwargs = dict(
-            [normalize_to_str(k), normalize_to_str(v)] for k, v in kwargs.items()
-        )
+        kwargs = {normalize_to_str(k): normalize_to_str(v) for k, v in kwargs.items()}
         args = req_args.copy()
         args.update(kwargs)
         response, content = self.connector.make_request("GET", url, urlparam=args)

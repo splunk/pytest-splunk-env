@@ -9,15 +9,19 @@
 from future import standard_library
 
 standard_library.install_aliases()
-from builtins import str
-from .base import Connector
-import urllib.request, urllib.parse, urllib.error
-import httplib2
-from pytest_splunk_env.splunk.helmut.exceptions import AuthenticationError
 import json
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
 import xml.etree.ElementTree as et
 from xml.dom.minidom import parseString
-import time
+
+import httplib2
+
+from pytest_splunk_env.splunk.helmut.exceptions import AuthenticationError
+
+from .base import Connector
 
 
 class RESTConnector(Connector):
@@ -49,26 +53,30 @@ class RESTConnector(Connector):
 
     def __init__(self, splunk, username=None, password=None, app=None, owner=None):
         """
-         Creates a new REST connector.
+        Creates a new REST connector.
 
-         The connector will logged in when created with default values
+        The connector will logged in when created with default values
 
-         @param splunk: The Splunk instance
-         @type splunk: L{..splunk.Splunk}
-         @param username: The username to use. If None (default)
-                          L{Connector.DEFAULT_USERNAME} is used.
-         @type username: str
-         @param password: The password to use. If None (default)
-                          L{Connector.DEFAULT_PASSWORD} is used.
-         @type password: str
-         @param app: The app to use.This will construct namespace <ownerr>:<app>
-         @type app: str
-         @param app: The owner to use.This will construct namespace <ownerr>:<app>
-         @type app: str
+        @param splunk: The Splunk instance
+        @type splunk: L{..splunk.Splunk}
+        @param username: The username to use. If None (default)
+                         L{Connector.DEFAULT_USERNAME} is used.
+        @type username: str
+        @param password: The password to use. If None (default)
+                         L{Connector.DEFAULT_PASSWORD} is used.
+        @type password: str
+        @param app: The app to use.This will construct namespace <ownerr>:<app>
+        @type app: str
+        @param app: The owner to use.This will construct namespace <ownerr>:<app>
+        @type app: str
 
         """
-        super(RESTConnector, self).__init__(
-            splunk, username=username, password=password, owner=owner, app=app,
+        super().__init__(
+            splunk,
+            username=username,
+            password=password,
+            owner=owner,
+            app=app,
         )
         self.uri_base = splunk.uri_base()
         self._timeout = 60
@@ -135,9 +143,9 @@ class RESTConnector(Connector):
         if type(urlparam) != str:
             urlparam = urllib.parse.urlencode(urlparam)
         if urlparam != "":
-            url = "%s%s?%s" % (self.uri_base, uri, urlparam)
+            url = f"{self.uri_base}{uri}?{urlparam}"
         else:
-            url = "%s%s" % (self.uri_base, uri)
+            url = f"{self.uri_base}{uri}"
 
         if use_sessionkey:
             self._service.clear_credentials()
@@ -157,14 +165,14 @@ class RESTConnector(Connector):
                     "method": method,
                     "url": url,
                     "body": body,
-                    "auth": "{u}:{p}".format(u=self._username, p=self._password),
+                    "auth": f"{self._username}:{self._password}",
                     "header": self.HEADERS,
                 }
             )
         )
         if log_response:
-            self.logger.info("Response => {r}".format(r=response))
-            self.logger.debug("Content  => {c}".format(c=content))
+            self.logger.info(f"Response => {response}")
+            self.logger.debug(f"Content  => {content}")
 
         return response, content
 
@@ -264,19 +272,19 @@ class RESTConnector(Connector):
 
     def login(self):
         """
-         Logs the connector in.
+        Logs the connector in.
 
-         Just hits the auth endpoint and retreives and sets the sessionkey.
+        Just hits the auth endpoint and retreives and sets the sessionkey.
 
         """
         body = urllib.parse.urlencode(
             {"username": self._username, "password": self._password}
         )
-        url = "%s%s" % (self.uri_base, "/services/auth/login")
+        url = "{}{}".format(self.uri_base, "/services/auth/login")
         response, content = self._service.request(url, "POST", body=body)
         self._attempt_login_time = time.time()
         if response.status != 200:
-            msg = "Login failed... response status: %s content: %s" % (
+            msg = "Login failed... response status: {} content: {}".format(
                 response.status,
                 content,
             )
@@ -290,10 +298,10 @@ class RESTConnector(Connector):
 
     def _clone_existing_service(self):
         """
-         clones the existing service
+        clones the existing service
 
-         @return: The newly created service (httplib) http object
-         @rtype: http object
+        @return: The newly created service (httplib) http object
+        @rtype: http object
         """
         http = httplib2.Http(
             timeout=self._timeout,
@@ -348,7 +356,7 @@ class RESTConnector(Connector):
 
         Hits an endpoint with that key and check response status is 401
         """
-        url = "%s%s" % (self.uri_base, "/services/data/outputs/tcp/default")
+        url = "{}{}".format(self.uri_base, "/services/data/outputs/tcp/default")
         self._service.clear_credentials()
         self.update_headers("Authorization", "Splunk %s" % self.sessionkey)
         response, content = self._service.request(url, "GET", headers=self.HEADERS)

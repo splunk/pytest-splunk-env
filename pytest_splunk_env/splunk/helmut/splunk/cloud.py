@@ -2,17 +2,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from __future__ import absolute_import
 
 import sys
 import time
 import traceback
-from builtins import str
 
 from splunklib.binding import HTTPError
 
 from pytest_splunk_env.splunk.helmut.connector.base import Connector
 from pytest_splunk_env.splunk.helmut.manager.jobs import Jobs
+
 from .base import Splunk
 
 
@@ -41,7 +40,7 @@ class CloudSplunk(Splunk):
         self._splunkd_scheme = splunkd_scheme or "https"
         self._splunkd_port = splunkd_port or "8089"
         self._splunkd_host = splunkd_host or "127.0.0.1"
-        super(CloudSplunk, self).__init__(name)
+        super().__init__(name)
         self.set_credentials_to_use(username=username, password=password)
 
         server_web_scheme = server_web_host = server_web_port = None
@@ -62,7 +61,7 @@ class CloudSplunk(Splunk):
         self._web_scheme = web_scheme or server_web_scheme or "http"
         self._web_host = web_host or server_web_host or self._splunkd_host
         self._web_port = web_port or server_web_port or ""
-        self.logger.debug("Set web base to: {}".format(self.web_base()))
+        self.logger.debug(f"Set web base to: {self.web_base()}")
 
     @property
     def _str_format(self):
@@ -149,7 +148,7 @@ class CloudSplunk(Splunk):
             and password != self.password
         ):
             raise CloudSplunkConnectorException()
-        return super(CloudSplunk, self).create_connector(
+        return super().create_connector(
             contype=contype, username=username, password=password, *args, **kwargs
         )
 
@@ -163,7 +162,7 @@ class CloudSplunk(Splunk):
         """
         if username and username != self.username:
             raise CloudSplunkConnectorException()
-        return super(CloudSplunk, self).connector(contype=contype, username=username)
+        return super().connector(contype=contype, username=username)
 
     def get_host_os(self):
         raise NotImplementedError("Host os should not matter for CloudSplunk.")
@@ -191,7 +190,7 @@ class CloudSplunk(Splunk):
         job = jobs.create("search %s" % search_string)
         job.wait()
         event_count = job.get_event_count()
-        self.logger.debug("Event count: {ec}".format(ec=event_count))
+        self.logger.debug(f"Event count: {event_count}")
         return event_count
 
     def get_final_event_count(

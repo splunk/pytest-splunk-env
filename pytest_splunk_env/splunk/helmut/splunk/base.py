@@ -63,8 +63,8 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
         self._connectors = {}
 
         self._name = name or id(self)
-        super(Splunk, self).__init__()
-        self.logger.debug("Helmut Splunk created:{splunk}".format(splunk=self))
+        super().__init__()
+        self.logger.debug(f"Helmut Splunk created:{self}")
 
     def __str__(self):
         """
@@ -80,7 +80,7 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
         """
         :return: constructed logger name as {cls}({name})
         """
-        return "{cls}({name})".format(cls=self.__class__.__name__, name=self.name)
+        return f"{self.__class__.__name__}({self.name})"
 
     @abstractproperty
     def _str_format(self):
@@ -190,9 +190,7 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
         connector_id = self._get_connector_id(contype=contype, user=conn.username)
 
         if connector_id in list(self._connectors.keys()):
-            self.logger.warning(
-                "Connector {id} is being replaced".format(id=connector_id)
-            )
+            self.logger.warning(f"Connector {connector_id} is being replaced")
             del self._connectors[connector_id]
         self._connectors[connector_id] = conn
 
@@ -205,7 +203,7 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
         username=None,
         password=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """
         Creates and returns a new connector of type specified or of type
@@ -267,7 +265,7 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
         @param username: splunk username used by connector
         @type username: string
         """
-        connector_id = "{contype}:{user}".format(contype=contype, user=user)
+        connector_id = f"{contype}:{user}"
         return connector_id
 
     def set_credentials_to_use(self, username="admin", password="changeme"):
@@ -333,9 +331,7 @@ class Splunk(with_metaclass(ABCMeta, Logging)):
 
         connector_id = self._get_connector_id(contype, username)
         if connector_id not in list(self._connectors.keys()):
-            raise InvalidConnector(
-                "Connector {id} does not exist".format(id=connector_id)
-            )
+            raise InvalidConnector(f"Connector {connector_id} does not exist")
         connector = self._connectors[connector_id]
         self._attempt_login(connector)
         return connector
@@ -642,7 +638,7 @@ class InvalidStartListener(AttributeError):
 
     def __init__(self, message=None):
         message = message or "Start listeners must be callable"
-        super(InvalidStartListener, self).__init__(message)
+        super().__init__(message)
 
 
 class CouldNotRestartSplunk(CommandExecutionFailure):

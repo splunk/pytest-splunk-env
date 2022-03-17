@@ -3,15 +3,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
-from filelock import FileLock
 import os
+
 import pytest
+from filelock import FileLock
 
 from .base import SC4SEnv
-#from .docker import splunk_docker
-from .external import SC4SEnvExternal
-#from .local import SC4SEnvLocal
+
+# from .local import SC4SEnvLocal
 from .dockercompose import SC4SEnvDockerCompose
+
+# from .docker import splunk_docker
+from .external import SC4SEnvExternal
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -79,9 +83,7 @@ def sc4s(request):
 
 
 @pytest.fixture(scope="session")
-def sc4s_docker_compose(
-    request, docker_services, splunk, tmp_path_factory
-):
+def sc4s_docker_compose(request, docker_services, splunk, tmp_path_factory):
     """
 
     sc4s docker depends on lovely-pytest-docker to create the docker instance
@@ -93,14 +95,12 @@ def sc4s_docker_compose(
         class: Details of the sc4s instance including host, port, username & password.
     """
     LOGGER.info("Starting docker_service=sc4s")
-    fn = os.path.join(tmp_path_factory.getbasetemp().parent,
-                      "pytest_splunk_env_docker_compose.lock")
+    fn = os.path.join(
+        tmp_path_factory.getbasetemp().parent, "pytest_splunk_env_docker_compose.lock"
+    )
 
     with FileLock(str(fn)):
-        return SC4SEnvDockerCompose(
-            docker_services,
-            splunk
-        )
+        return SC4SEnvDockerCompose(docker_services, splunk)
 
 
 @pytest.fixture(scope="session")
@@ -117,8 +117,9 @@ def sc4s_docker(
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Starting docker=sc4s")
-    fn = os.path.join(tmp_path_factory.getbasetemp().parent,
-                      "pytest_splunk_env_docker.lock")
+    fn = os.path.join(
+        tmp_path_factory.getbasetemp().parent, "pytest_splunk_env_docker.lock"
+    )
     raise Exception
 
 
@@ -131,10 +132,7 @@ def sc4s_external(request, splunk_setup):
         dict: Details of the splunk instance including host, port, username & password.
     """
     LOGGER.info("Checking Splunk")
-    return SC4SEnvExternal(splunk_setup,
-        request.config.getoption("sc4s_host")
-        
-    )
+    return SC4SEnvExternal(splunk_setup, request.config.getoption("sc4s_host"))
 
 
 @pytest.fixture(scope="session")
@@ -152,7 +150,5 @@ def sc4s_local(request):
         search_interval=request.config.getoption("search_interval"),
         username=request.config.getoption("splunk_user"),
         password=request.config.getoption("splunk_password"),
-        hec_token=request.config.getoption(
-            "splunk_hec_token"),
-
+        hec_token=request.config.getoption("splunk_hec_token"),
     )

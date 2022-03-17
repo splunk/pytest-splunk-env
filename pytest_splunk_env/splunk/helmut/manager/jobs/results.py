@@ -8,10 +8,9 @@
 @since: 2011-11-23
 """
 import copy
-from builtins import object
 
 
-class Results(object):
+class Results:
     """
     A class that represents a result set.
 
@@ -56,7 +55,7 @@ class Results(object):
         @param results_: The raw results as returned by ResultReader
         @type results_: list
         """
-        super(Results, self).__init__()
+        super().__init__()
 
         self._list = results_
         self._dict_cache = None
@@ -68,7 +67,7 @@ class Results(object):
         @return: The representation
         @rtype: str
         """
-        return "Results set with {count} result(s)".format(count=len(self))
+        return f"Results set with {len(self)} result(s)"
 
     def get_field(self, field):
         """
